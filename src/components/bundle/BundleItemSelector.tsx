@@ -62,9 +62,21 @@ export default function BundleItemSelector({
     const displayProducts = categoryProducts.length > 0 ? categoryProducts : products.slice(0, 12);
 
     // Get available sizes and colors from variants
-    const sizes = selected ? sortSizes(Array.from(new Set(
-        selected.variants.map(v => v.option1).filter(Boolean)
-    ))) : [];
+    // const sizes = selected ? sortSizes(Array.from(new Set(
+    //     selected.variants.map(v => v.option1).filter(Boolean)
+    // ))) : [];
+    const sizes = selected
+        ? sortSizes(
+            Array.from(
+                new Set(
+                    selected.variants
+                        .map(v => v.option1)
+                        .filter((v): v is string => typeof v === "string")
+                )
+            )
+        )
+        : [];
+
 
     const colors = selected ? Array.from(new Set(
         selected.variants.map(v => v.option2).filter(Boolean)
