@@ -1,0 +1,7 @@
+﻿
+C:\WUF-Ecommerce\src\app\search\page.tsx
+  39:84  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+  39:92  error  `"` can be escaped with `&quot;`, `&ldquo;`, `&#34;`, `&rdquo;`  react/no-unescaped-entities
+
+Γ£û 2 problems (2 errors, 0 warnings)
+
