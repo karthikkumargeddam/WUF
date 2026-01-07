@@ -39,7 +39,7 @@ export const colorMap: Record<string, string> = {
     'khaki': '#F0E68C',
     'olive': '#808000',
     'chocolate': '#D2691E',
-    'purple': '#800080',
+    //'purple': '#800080',
     'lavender': '#E6E6FA',
     'fuschia': '#FF00FF',
     'hot pink': '#FF69B4',
