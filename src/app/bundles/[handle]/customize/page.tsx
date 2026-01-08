@@ -19,51 +19,51 @@ export default async function BundleCustomizePage({ params }: PageProps) {
         console.warn("Server fetch returned 0 products, using mock fallback.");
         products = [
             {
-                id: 'mock-polo',
+                id: 9001,
                 title: 'Premium Cotton Polo',
                 handle: 'premium-cotton-polo',
                 product_type: 'Polo Shirt',
                 tags: ['polo', 'workwear'],
                 images: [{ src: 'https://wearunifab.com/cdn/shop/files/UC101_Black_Front.jpg', alt: 'Polo' }],
-                variants: [{ id: 'v-p-1', title: 'M / Black', price: '15.00', option1: 'M', option2: 'Black' }]
+                variants: [{ id: 90011, title: 'M / Black', price: '15.00', option1: 'M', option2: 'Black' }]
             },
             {
-                id: 'mock-hoodie',
+                id: 9002,
                 title: 'Heavyweight Hoodie',
                 handle: 'heavyweight-hoodie',
                 product_type: 'Hoodie',
                 tags: ['hoodie', 'warm'],
                 images: [{ src: 'https://wearunifab.com/cdn/shop/files/UC502_Navy_Front.jpg', alt: 'Hoodie' }],
-                variants: [{ id: 'v-h-1', title: 'L / Navy', price: '25.00', option1: 'L', option2: 'Navy' }]
+                variants: [{ id: 90021, title: 'L / Navy', price: '25.00', option1: 'L', option2: 'Navy' }]
             },
             {
-                id: 'mock-vest',
+                id: 9003,
                 title: 'Hi-Vis Safety Vest',
                 handle: 'hi-vis-safety-vest',
                 product_type: 'Hi-Vis Vest',
                 tags: ['hi-vis', 'vest', 'safety'],
                 images: [{ src: 'https://wearunifab.com/cdn/shop/files/Yoko_Hiviz_Waistcoat_Yellow_Front.jpg', alt: 'Hi-Vis Vest' }],
-                variants: [{ id: 'v-v-1', title: 'L / Yellow', price: '5.00', option1: 'L', option2: 'Yellow' }]
+                variants: [{ id: 90031, title: 'L / Yellow', price: '5.00', option1: 'L', option2: 'Yellow' }]
             },
             {
-                id: 'mock-fleece',
+                id: 9004,
                 title: 'Polar Fleece Jacket',
                 handle: 'polar-fleece-jacket',
                 product_type: 'Fleece',
                 tags: ['fleece', 'jacket'],
                 images: [{ src: 'https://wearunifab.com/cdn/shop/files/UC604_Black_Front.jpg', alt: 'Fleece' }],
-                variants: [{ id: 'v-f-1', title: 'L / Black', price: '20.00', option1: 'L', option2: 'Black' }]
+                variants: [{ id: 90041, title: 'L / Black', price: '20.00', option1: 'L', option2: 'Black' }]
             },
             {
-                id: 'mock-softshell',
+                id: 9005,
                 title: 'Technical Softshell',
                 handle: 'technical-softshell',
                 product_type: 'Softshell',
                 tags: ['softshell', 'jacket'],
                 images: [{ src: 'https://wearunifab.com/cdn/shop/files/R231M_Black_Front.jpg', alt: 'Softshell' }],
-                variants: [{ id: 'v-s-1', title: 'L / Black', price: '35.00', option1: 'L', option2: 'Black' }]
+                variants: [{ id: 90051, title: 'L / Black', price: '35.00', option1: 'L', option2: 'Black' }]
             }
-        ];
+        ] as Product[];
     }
 
     return <BundleCustomizer initialProducts={products} bundleHandle={handle} />;

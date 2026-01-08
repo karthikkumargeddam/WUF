@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import React from 'react';
 import { OrderConfirmationEmail } from '@/components/emails/OrderConfirmationEmail';
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -22,18 +23,18 @@ export async function POST(req: Request) {
             to: [to],
             // For testing without domain: 'onboarding@resend.dev'
             subject: `Order Confirmation #${orderData.orderId} - Wearunifab`,
-            react: OrderConfirmationEmail({
-                orderId: orderData.orderId,
-                customerName: orderData.customerName,
-                items: orderData.items,
-                total: orderData.total,
-                shippingAddress: orderData.shippingAddress
-            }),
+            react: <OrderConfirmationEmail
+                orderId={ orderData.orderId }
+                customerName = { orderData.customerName }
+                items = { orderData.items }
+                total = { orderData.total }
+                shippingAddress = { orderData.shippingAddress }
+            />,
         });
 
-        return NextResponse.json(data);
-    } catch (error) {
-        console.error("Email API Error:", error);
-        return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
-    }
+    return NextResponse.json(data);
+} catch (error) {
+    console.error("Email API Error:", error);
+    return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+}
 }

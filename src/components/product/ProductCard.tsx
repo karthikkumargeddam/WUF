@@ -15,7 +15,7 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
     const { trackEvent } = useAnalytics();
     const { isInWishlist, toggleItem } = useWishlistStore();
-    const isWishlisted = isInWishlist(product.id.toString());
+    const isWishlisted = isInWishlist(product.id);
 
     const firstVariant = product.variants[0];
     const price = parseFloat(firstVariant?.price || '0');
@@ -53,7 +53,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     const handleWishlist = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        toggleItem(product.id.toString());
+        toggleItem(product.id);
     };
 
     return (

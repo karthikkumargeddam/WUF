@@ -1,0 +1,90 @@
+﻿
+> wuf-ecommerce@0.1.0 build
+> next build
+
+Γû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+Γ£ô Compiled successfully in 15.0s
+  Running TypeScript ...
+node.exe : Failed to 
+compile.
+At C:\Program Files\n
+odejs\npm.ps1:29 
+char:3
++   & $NODE_EXE 
+$NPM_CLI_JS $args
++   ~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo   
+           : NotSpe  
+  cified: (Failed    
+ to compile.:Stri    
+ng) [], RemoteEx    
+ception
+    + FullyQualified 
+   ErrorId : Native  
+  CommandError
+ 
+
+./src/app/wishlist/pa
+ge.tsx:29:86
+Type error: Argument 
+of type 'number' is 
+not assignable to 
+parameter of type 
+'string'.
+
+[0m [90m 27 |[39m 
+                
+[90m// and filter. 
+In a real app with 
+thousands of 
+products, we'd make 
+a specific API 
+endpoint.[39m
+ [90m 28 |[39m     
+            
+[36mconst[39m { 
+products[33m:[39m 
+allProducts } 
+[33m=[39m 
+[36mawait[39m fetch
+Products([35m1[39m
+[33m,[39m [35m250[
+39m)[33m;[39m
+[31m[1m>[22m[39m
+[90m 29 |[39m       
+          
+[36mconst[39m 
+wishlistedProducts 
+[33m=[39m allProduc
+ts[33m.[39mfilter(p
+ [33m=>[39m wishlis
+t[33m.[39mincludes(
+p[33m.[39mid))[33m
+;[39m
+ [90m    |[39m     
+                     
+                     
+                     
+                  
+[31m[1m^[22m[39m
+ [90m 30 |[39m     
+            setProduc
+ts(wishlistedProducts
+)[33m;[39m
+ [90m 31 |[39m     
+        } 
+[36mcatch[39m 
+(error) {
+ [90m 32 |[39m     
+            console[
+33m.[39merror([32m"
+Failed to load wishli
+st"[39m[33m,[39m 
+error)[33m;[39m[0m
+Next.js build worker 
+exited with code: 1 
+and signal: null
