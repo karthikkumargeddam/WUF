@@ -19,9 +19,8 @@ export async function POST(req: Request) {
 
         const data = await resend.emails.send({
             from: 'Wearunifab <onboarding@resend.dev>', // SWITCHED TO DEFAULT DOMAIN FOR TESTING
-            to: [to], // Note: You need a verified domain to use custom 'from', using generic restricted domain for now if unmatched
-            // For testing without domain: 'onboarding@resend.dev'
             to: [to],
+            // For testing without domain: 'onboarding@resend.dev'
             subject: `Order Confirmation #${orderData.orderId} - Wearunifab`,
             react: OrderConfirmationEmail({
                 orderId: orderData.orderId,
