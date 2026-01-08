@@ -30,12 +30,13 @@ export const useAuthStore = create<AuthStore>()((set) => ({
     loading: true,
 
     login: async (email, password) => {
+        const cleanEmail = email.trim();
         if (!auth) {
             console.error("Firebase Auth not initialized");
             throw new Error("Authentication system unavailable");
         }
         try {
-            await signInWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, cleanEmail, password);
         } catch (error) {
             console.error("Auth Store Login Error:", error);
             throw error;
@@ -44,12 +45,13 @@ export const useAuthStore = create<AuthStore>()((set) => ({
     },
 
     signup: async (email, password) => {
+        const cleanEmail = email.trim();
         if (!auth) {
             console.error("Firebase Auth not initialized");
             throw new Error("Authentication system unavailable");
         }
         try {
-            await createUserWithEmailAndPassword(auth, email, password);
+            await createUserWithEmailAndPassword(auth, cleanEmail, password);
         } catch (error) {
             console.error("Auth Store Signup Error:", error);
             throw error;

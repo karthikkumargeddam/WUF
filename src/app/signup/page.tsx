@@ -58,7 +58,11 @@ export default function SignupPage() {
 
         } catch (err: any) {
             console.error(err);
-            setError(err.message || 'Failed to create account.');
+            if (err.code === 'auth/email-already-in-use') {
+                setError('This email is already registered. Please log in.');
+            } else {
+                setError(err.message || 'Failed to create account.');
+            }
             setIsLoading(false);
         }
     };

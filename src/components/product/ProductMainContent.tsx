@@ -19,17 +19,20 @@ export default function ProductMainContent({ product }: ProductMainContentProps)
     const getSizeScale = (variant: ProductVariant) => {
         const size = variant.option1?.toLowerCase().trim() || '';
 
-        // Exact matches for abbreviations or keywords
-        if (size === 's' || size === 'xs' || size.includes('small')) return 0.85;
+        // Standard Sizes & Abbr
+        if (size === 's' || size === 'xs' || size.includes('small') || size.includes('extra small')) return 0.85;
         if (size === 'm' || size.includes('medium')) return 1;
         if (size === 'l' || size.includes('large')) return 1.1;
-        if (size === 'xl' || size.includes('x-large')) return 1.2;
-        if (size === '2xl' || size.includes('xxl')) return 1.3;
-        if (size === '3xl' || size.includes('xxxl')) return 1.4;
-        if (size === '4xl' || size.includes('xxxxl')) return 1.5;
 
-        // Detailed fallback for "X Months", "X Years" (Kids)
-        if (size.includes('month') || size.includes('year')) return 0.7;
+        // XL Variations
+        if (size === 'xl' || size === '1xl' || size.includes('x-large')) return 1.2;
+        if (size === '2xl' || size === 'xxl' || size.includes('xxl') || size.includes('2x')) return 1.3;
+        if (size === '3xl' || size === 'xxxl' || size.includes('xxxl') || size.includes('3x')) return 1.4;
+        if (size === '4xl' || size === 'xxxxl' || size.includes('xxxxl') || size.includes('4x')) return 1.5;
+        if (size === '5xl' || size.includes('5x')) return 1.6;
+
+        // Kids / Toddler
+        if (size.includes('month') || size.includes('year') || size.includes('t') || size.includes('y')) return 0.7;
 
         return 1;
     };

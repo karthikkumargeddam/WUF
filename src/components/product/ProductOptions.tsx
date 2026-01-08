@@ -58,8 +58,8 @@ export default function ProductOptions({ product, onVariantChange }: ProductOpti
                                     key={value}
                                     onClick={() => handleOptionChange(option.name, value)}
                                     className={`px-4 py-2 text-sm border-2 rounded-lg transition-all ${isSelected
-                                        ? 'border-zinc-900 bg-zinc-900 text-white font-bold'
-                                        : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300'
+                                        ? 'border-zinc-900 bg-zinc-900 text-white font-bold scale-110 shadow-lg transform'
+                                        : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:scale-105'
                                         }`}
                                 >
                                     {value}

@@ -87,7 +87,7 @@ export default async function Header() {
                         </li>
                         {menuCollections.map((collection) => (
                             <li key={collection.id}>
-                                <Link href={`/ collections / ${collection.handle} `} prefetch={true} className="hover:text-white whitespace-nowrap capitalize transition-colors">
+                                <Link href={`/collections/${collection.handle}`} prefetch={true} className="hover:text-white whitespace-nowrap capitalize transition-colors">
                                     {collection.title}
                                 </Link>
                             </li>

@@ -32,7 +32,11 @@ export default function LoginPage() {
             router.push('/dashboard');
         } catch (err: any) {
             console.error(err);
-            setError('Invalid credentials. Please check your email and secure token.');
+            if (err.code === 'auth/invalid-credential') {
+                setError('Invalid email or password.');
+            } else {
+                setError(err.message || 'An error occurred during authentication.');
+            }
             setIsLoading(false);
         }
     };
@@ -99,7 +103,7 @@ export default function LoginPage() {
                     </form>
 
                     <div className="mt-8 pt-8 border-t border-zinc-50 flex flex-col gap-4 text-center">
-                        <Link href="/contact" className="text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-900 underline-offset-4 decoration-2">Request Business Account</Link>
+                        <Link href="/signup" className="text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-zinc-900 underline-offset-4 decoration-2">Request Business Account</Link>
                         <p className="text-[10px] text-zinc-300 font-medium">Standard industrial authentication protocol — 256-bit encrypted</p>
                     </div>
                 </div>
