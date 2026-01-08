@@ -38,9 +38,9 @@ export async function fetchCollections(): Promise<CollectionsResponse> {
     }
 }
 
-export async function fetchCollectionProducts(handle: string, limit: number = 250): Promise<ProductsResponse> {
+export async function fetchCollectionProducts(handle: string, page: number = 1, limit: number = 250): Promise<ProductsResponse> {
     try {
-        const res = await fetch(`${BASE_URL}/collections/${handle}/products.json?limit=${limit}`, {
+        const res = await fetch(`${BASE_URL}/collections/${handle}/products.json?limit=${limit}&page=${page}`, {
             next: { revalidate: 21600 }, // Cache for 6 hours
             cache: 'force-cache',
         });

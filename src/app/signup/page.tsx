@@ -5,18 +5,85 @@ import { useRouter } from 'next/navigation';
 import { ShieldCheck, Mail, Lock, User, ChevronRight, ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 
+import { useAnalytics } from '@/hooks/useAnalytics';
+
+import { useAuthStore } from '@/store/authStore';
+
 export default function SignupPage() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const { trackEvent } = useAnalytics();
+    const { signup } = useAuthStore();
 
-    const handleSignup = (e: React.FormEvent) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [company, setCompany] = useState('');
+    const [error, setError] = useState('');
+
+    const [isSuccess, setIsSuccess] = useState(false);
+
+    const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate signup delay
-        setTimeout(() => {
-            router.push('/dashboard');
-        }, 1500);
+        setError('');
+
+        try {
+            await signup(email, password);
+
+            const { db } = await import('@/lib/firebase');
+            const { doc, setDoc } = await import('firebase/firestore');
+            const { auth } = await import('@/lib/firebase');
+            const { updateProfile } = await import('firebase/auth');
+
+            // Update Auth Profile
+            if (auth.currentUser) {
+                await updateProfile(auth.currentUser, { displayName: company });
+            }
+
+            // Save to Firestore
+            await setDoc(doc(db, 'users', email), {
+                email,
+                displayName: company,
+                companyName: company, // keeping both for backward compat
+                createdAt: new Date(),
+            });
+
+            trackEvent('sign_up', { method: 'email_password' });
+            setIsSuccess(true);
+
+            // Auto redirect after 3s
+            setTimeout(() => {
+                router.push('/');
+            }, 3000);
+
+        } catch (err: any) {
+            console.error(err);
+            setError(err.message || 'Failed to create account.');
+            setIsLoading(false);
+        }
     };
+
+    if (isSuccess) {
+        return (
+            <div className="min-h-screen bg-zinc-50 flex items-center justify-center py-20 px-4">
+                <div className="max-w-md w-full text-center">
+                    <div className="bg-white p-12 rounded-[3.1rem] border-4 border-zinc-100 shadow-2xl">
+                        <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                            <ShieldCheck size={40} />
+                        </div>
+                        <h2 className="text-3xl font-black text-zinc-900 mb-4">Welcome!</h2>
+                        <p className="text-zinc-500 mb-8 font-medium">Your account {email} has been created.</p>
+
+                        <div className="space-y-4">
+                            <Link href="/" className="block w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold uppercase tracking-widest hover:bg-zinc-800 transition-colors">
+                                Start Shopping
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="min-h-screen bg-zinc-50 flex items-center justify-center py-20 px-4">
@@ -35,12 +102,14 @@ export default function SignupPage() {
 
                     <form onSubmit={handleSignup} className="space-y-6">
                         <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Company Name</label>
+                            <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">Your Name</label>
                             <input
                                 type="text"
                                 required
+                                value={company}
+                                onChange={(e) => setCompany(e.target.value)}
                                 className="w-full px-6 py-4 rounded-2xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all font-medium"
-                                placeholder="Acme Industries Ltd."
+                                placeholder="John Doe"
                             />
                         </div>
 
@@ -51,6 +120,8 @@ export default function SignupPage() {
                                 <input
                                     type="email"
                                     required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all font-medium"
                                     placeholder="procurement@acme.com"
                                 />
@@ -64,11 +135,19 @@ export default function SignupPage() {
                                 <input
                                     type="password"
                                     required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all font-medium"
                                     placeholder="**************"
                                 />
                             </div>
                         </div>
+
+                        {error && (
+                            <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl text-center">
+                                {error}
+                            </div>
+                        )}
 
                         <button
                             disabled={isLoading}

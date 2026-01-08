@@ -1,16 +1,31 @@
 "use client";
 
-import { Box, Package, RefreshCcw, Truck, LayoutDashboard, Settings, LogOut, ExternalLink, ShoppingBag } from 'lucide-react';
+import { Box, Package, RefreshCcw, Truck, LayoutDashboard, Settings, LogOut, ExternalLink, ShoppingBag, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { useCartStore } from '@/store/cartStore';
 import { useEffect, useState } from 'react';
+import { db } from '@/lib/firebase';
+import { collection, query, orderBy, limit, onSnapshot, Timestamp } from 'firebase/firestore';
 
 export default function DashboardPage() {
     const { orders } = useCartStore();
     const [mounted, setMounted] = useState(false);
+    const [liveEvents, setLiveEvents] = useState<any[]>([]);
 
     useEffect(() => {
         setMounted(true);
+
+        const q = query(collection(db, 'analytics_events'), orderBy('timestamp', 'desc'), limit(10));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const events = snapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data(),
+                timestamp: doc.data().timestamp?.toDate() || new Date()
+            }));
+            setLiveEvents(events);
+        });
+
+        return () => unsubscribe();
     }, []);
 
     const defaultPastOrders = [
@@ -67,36 +82,69 @@ export default function DashboardPage() {
                     </Link>
                 </header>
 
-                {/* Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-                    <div className="bg-white p-8 rounded-[2.5rem] border-2 border-zinc-100 shadow-sm relative overflow-hidden group hover:border-zinc-900 transition-all">
-                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                            <Box size={100} />
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+                    {/* Live Operations Feed (Takes up 2/3 on large screens) */}
+                    <div className="lg:col-span-2 bg-zinc-900 text-zinc-400 rounded-[2.5rem] border-2 border-zinc-800 shadow-sm p-8 overflow-hidden relative">
+                        <div className="absolute top-0 right-0 p-8 opacity-10">
+                            <Activity size={120} className="text-white" />
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">Total Deployments</p>
-                        <h3 className="text-5xl font-black text-zinc-950 tracking-tighter">{142 + orders.length}</h3>
-                        <p className="text-xs text-green-600 font-bold mt-2">Active Procurement Cycle</p>
+                        <div className="flex items-center justify-between mb-6 relative z-10">
+                            <h3 className="text-white text-xl font-black uppercase tracking-tighter flex items-center gap-3">
+                                <span className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+                                Live Operations Log
+                            </h3>
+                            <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Real-time Feed</div>
+                        </div>
+
+                        <div className="space-y-4 max-h-[300px] overflow-y-auto pr-2 relative z-10 scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+                            {liveEvents.length > 0 ? liveEvents.map((event) => (
+                                <div key={event.id} className="bg-zinc-800/50 p-4 rounded-xl border border-zinc-800 flex items-start justify-between gap-4 animate-in fade-in slide-in-from-right-4 duration-500 text-xs">
+                                    <div>
+                                        <p className="text-white font-bold uppercase tracking-wide mb-1">
+                                            {event.event_type.replace(/_/g, ' ')}
+                                        </p>
+                                        <p className="text-zinc-500 truncate max-w-[250px]">
+                                            {event.metadata?.title || event.url || 'User Action'}
+                                        </p>
+                                    </div>
+                                    <div className="text-right whitespace-nowrap">
+                                        <p className="text-zinc-500 font-mono text-[10px]">
+                                            {event.timestamp.toLocaleTimeString([], { hour12: false })}
+                                        </p>
+                                        {event.metadata?.price && (
+                                            <p className="text-green-500 font-bold">£{event.metadata.price}</p>
+                                        )}
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className="text-zinc-600 text-center py-12 italic text-sm">Waiting for live signal...</div>
+                            )}
+                        </div>
                     </div>
-                    <div className="bg-white p-8 rounded-[2.5rem] border-2 border-zinc-100 shadow-sm relative overflow-hidden group hover:border-zinc-900 transition-all">
-                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                            <Truck size={100} />
+
+                    {/* Quick Stats Column */}
+                    <div className="grid grid-cols-1 gap-4">
+                        <div className="bg-white p-6 rounded-[2rem] border-2 border-zinc-100 shadow-sm flex flex-col justify-between group hover:border-zinc-900 transition-all">
+                            <div>
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">System Events</p>
+                                <h3 className="text-4xl font-black text-zinc-950 tracking-tighter">{liveEvents.length}</h3>
+                            </div>
+                            <div className="mt-4 flex items-center gap-2 text-[10px] font-bold uppercase text-green-600">
+                                <Activity size={12} /> Live Tracking
+                            </div>
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">In Transit</p>
-                        <h3 className="text-5xl font-black text-zinc-950 tracking-tighter">{String(4 + orders.filter(o => o.status !== 'Delivered').length).padStart(2, '0')}</h3>
-                        <p className="text-xs text-zinc-500 font-bold mt-2">Logistics Synchronization Active</p>
-                    </div>
-                    <div className="bg-white p-8 rounded-[2.5rem] border-2 border-zinc-100 shadow-sm relative overflow-hidden group hover:border-zinc-900 transition-all">
-                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity">
-                            <RefreshCcw size={100} />
+                        <div className="bg-white p-6 rounded-[2rem] border-2 border-zinc-100 shadow-sm flex flex-col justify-between group hover:border-zinc-900 transition-all">
+                            <div>
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">Total Deployments</p>
+                                <h3 className="text-4xl font-black text-zinc-950 tracking-tighter">{142 + orders.length}</h3>
+                            </div>
+                            <Link href="#" className="mt-4 text-[10px] font-black uppercase text-zinc-900 underline underline-offset-2">View Report</Link>
                         </div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-2">Quick Reorder</p>
-                        <p className="text-xs text-zinc-900 font-bold mt-4 leading-relaxed line-clamp-2">Re-initialize last fleet deployment for rapid response.</p>
-                        <button className="mt-4 text-xs font-black uppercase text-zinc-950 underline underline-offset-4">EXECUTE NOW</button>
                     </div>
                 </div>
 
                 {/* Recent Orders */}
-                <div className="bg-white rounded-[2.5rem] border-2 border-zinc-100 shadow-sm overflow-hidden">
+                <div className="bg-white rounded-[2.5rem] border-2 border-zinc-100 shadow-sm overflow-hidden mb-12">
                     <div className="p-8 border-b border-zinc-100 flex items-center justify-between">
                         <h3 className="text-xl font-black text-zinc-950 uppercase tracking-tighter">Recent Deployment History</h3>
                         <Link href="#" className="text-xs font-black uppercase border-b-2 border-zinc-900 py-1">View Full Log</Link>
@@ -110,7 +158,6 @@ export default function DashboardPage() {
                                     <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Asset Count</th>
                                     <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Total Capital</th>
                                     <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400">Status</th>
-                                    <th className="px-8 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400"></th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-zinc-100">
@@ -135,16 +182,11 @@ export default function DashboardPage() {
                                                     {order.status}
                                                 </span>
                                             </td>
-                                            <td className="px-8 py-5 text-right">
-                                                <button className="p-2 text-zinc-300 group-hover:text-zinc-950 transition-colors">
-                                                    <ExternalLink size={18} />
-                                                </button>
-                                            </td>
                                         </tr>
                                     );
                                 }) : (
                                     <tr>
-                                        <td colSpan={6} className="px-8 py-20 text-center">
+                                        <td colSpan={5} className="px-8 py-20 text-center">
                                             <ShoppingBag size={40} className="mx-auto text-zinc-200 mb-4" />
                                             <p className="text-zinc-400 font-medium uppercase tracking-widest text-xs">No Deployment History Found</p>
                                         </td>

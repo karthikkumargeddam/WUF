@@ -19,12 +19,23 @@ export function calculateBundlePrice(bundle: Bundle): number {
     // Additional placements would cost extra
     const logoTotal = bundle.items.reduce((total, item) => {
         if (item.logoCustomization && item.logoCustomization.type !== 'none' && item.logoCustomization.placement) {
-            const count = item.logoCustomization.placement.length;
-            // Subtract free logos if included (1 per item)
-            const billableCount = bundle.freeLogoIncluded
-                ? Math.max(0, count - 1)
-                : count;
-            return total + (billableCount * LOGO_PRICE);
+            const placements = item.logoCustomization.placement;
+
+            // Logic: If bundle includes free logo, it STRICTLY means 'left-chest' is free.
+            // Any other position (right-chest, back, etc.) is chargeable.
+
+            let itemLogoCost = 0;
+            placements.forEach(p => {
+                if (p === 'left-chest' && bundle.freeLogoIncluded) {
+                    // Free
+                    itemLogoCost += 0;
+                } else {
+                    // Chargeable
+                    itemLogoCost += LOGO_PRICE;
+                }
+            });
+
+            return total + itemLogoCost;
         }
         return total;
     }, 0);
@@ -183,10 +194,20 @@ export function getLogoPlacementOptions(category: string): {
             ...commonPlacements,
             { value: 'sleeve', label: 'Sleeve', description: 'Left or right sleeve' },
         ],
+        'fleeces': [
+            ...commonPlacements,
+            { value: 'sleeve', label: 'Sleeve', description: 'Left or right sleeve' },
+        ],
+        'hi-vis': [
+            ...commonPlacements,
+            { value: 'back-large', label: 'Large Back Print', description: 'Large print on back' },
+        ],
     };
 
     return categorySpecific[category] || commonPlacements;
 }
+
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Create a default bundle item
@@ -196,7 +217,7 @@ export function createDefaultBundleItem(
     categoryLabel: string
 ): BundleItem {
     return {
-        id: `${category}-${Date.now()}`,
+        id: uuidv4(),
         category,
         categoryLabel,
         logoCustomization: {

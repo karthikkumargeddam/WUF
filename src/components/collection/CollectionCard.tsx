@@ -13,7 +13,7 @@ const CollectionCard = ({ collection }: CollectionCardProps) => {
     const imageSrc = collection.image?.src || getCategoryBackground(collection.title);
 
     return (
-        <Link href={`/collections/${collection.handle}`} prefetch={true} className="group block relative overflow-hidden rounded-[3rem] bg-zinc-950 aspect-[4/5] border-4 border-zinc-100 hover:border-zinc-900 transition-all duration-700 shadow-xl hover:shadow-2xl translate-z-0">
+        <Link href={`/collections/${collection.handle}`} prefetch={true} className="group block relative overflow-hidden rounded-[3rem] bg-zinc-950 aspect-[4/5] border-4 border-zinc-900 hover:border-zinc-700 transition-all duration-700 shadow-xl hover:shadow-2xl translate-z-0">
             <Image
                 src={imageSrc}
                 alt={collection.title}

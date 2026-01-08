@@ -1,21 +1,40 @@
 "use client";
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ShieldCheck, Lock, Mail, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
+import { useAnalytics } from '@/hooks/useAnalytics';
+import { useAuthStore } from '@/store/authStore';
+
 export default function LoginPage() {
     const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+    const { trackEvent } = useAnalytics();
+    const { login } = useAuthStore();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        // Simulate login delay
-        setTimeout(() => {
+        setError('');
+
+        try {
+            await login(email, password);
+
+            // Track login success
+            trackEvent('login', { method: 'email_password' });
+
             router.push('/dashboard');
-        }, 1500);
+        } catch (err: any) {
+            console.error(err);
+            setError('Invalid credentials. Please check your email and secure token.');
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -41,6 +60,8 @@ export default function LoginPage() {
                                 <input
                                     type="email"
                                     required
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all font-medium"
                                     placeholder="procurement@acme.com"
                                 />
@@ -54,11 +75,19 @@ export default function LoginPage() {
                                 <input
                                     type="password"
                                     required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
                                     className="w-full pl-12 pr-4 py-4 rounded-2xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all font-medium"
                                     placeholder="**************"
                                 />
                             </div>
                         </div>
+
+                        {error && (
+                            <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl text-center">
+                                {error}
+                            </div>
+                        )}
 
                         <button
                             disabled={isLoading}

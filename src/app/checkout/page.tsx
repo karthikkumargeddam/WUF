@@ -4,20 +4,42 @@ import { useCartStore } from "@/store/cartStore";
 import { CheckCircle2, ChevronLeft, ChevronRight, CreditCard, Ship, ShoppingBag, Truck } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useAnalytics } from "@/hooks/useAnalytics";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useAuthStore } from "@/store/authStore";
+import { useProfile } from "@/hooks/useProfile";
+import ShippingForm from "@/components/checkout/ShippingForm";
+import { v4 as uuidv4 } from 'uuid';
 
 type Step = 'shipping' | 'payment' | 'review' | 'success';
 
 export default function CheckoutPage() {
     const { items, getCartTotal, addOrder } = useCartStore();
+    const { profile } = useProfile();
+    const { isAuthenticated } = useAuthStore();
+    const router = useRouter();
     const [step, setStep] = useState<Step>('shipping');
     const [mounted, setMounted] = useState(false);
+    const [guestEmail, setGuestEmail] = useState('');
+    const { trackEvent } = useAnalytics();
 
-    // Prevent hydration mismatch
+    useEffect(() => {
+        if (mounted) {
+            trackEvent('checkout_view', { step: step, cart_size: items.length });
+        }
+    }, [step, mounted, items.length, trackEvent]);
+
+    // Prevent hydration mismatch & Protect Route
     useEffect(() => {
         setMounted(true);
+        if (!isAuthenticated) {
+            router.push('/login?redirect=/checkout');
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [isAuthenticated]);
 
     if (!mounted) return null;
 
@@ -68,54 +90,15 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 pt-8">
                         {/* Main Form Area */}
                         <div className="lg:col-span-2">
-                            {step === 'shipping' && (
-                                <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border-2 border-zinc-200 shadow-sm">
-                                    <h2 className="text-3xl font-black text-zinc-950 uppercase tracking-tighter mb-8 flex items-center gap-3">
-                                        <Truck className="text-zinc-900" /> Shipping Logistics
-                                    </h2>
-                                    <form className="space-y-6">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">First Name</label>
-                                                <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="John" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Last Name</label>
-                                                <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="Doe" />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Company Name (Optional)</label>
-                                            <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="Acme Industrial Corp" />
-                                        </div>
-                                        <div className="space-y-2">
-                                            <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Shipping Address</label>
-                                            <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="123 Industrial Way" />
-                                        </div>
-                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">City</label>
-                                                <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="New York" />
-                                            </div>
-                                            <div className="space-y-2">
-                                                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">State</label>
-                                                <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="NY" />
-                                            </div>
-                                            <div className="space-y-2 col-span-2 md:col-span-1">
-                                                <label className="text-xs font-black uppercase tracking-widest text-zinc-500">ZIP Code</label>
-                                                <input type="text" className="w-full p-4 rounded-xl border-2 border-zinc-100 focus:border-zinc-900 focus:outline-none transition-all" placeholder="10001" />
-                                            </div>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            onClick={() => setStep('payment')}
-                                            className="w-full py-5 bg-zinc-900 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-zinc-800 transition-all shadow-xl flex items-center justify-center gap-2 group"
-                                        >
-                                            Continue to Payment <ChevronRight className="group-hover:translate-x-1 transition-transform" />
-                                        </button>
-                                    </form>
-                                </div>
-                            )}
+                            <ShippingForm
+                                onNext={(email) => {
+                                    setGuestEmail(email);
+                                    setStep('payment');
+                                }}
+                                initialData={profile?.shippingAddress}
+                                userProfile={profile}
+                            />
+
 
                             {step === 'payment' && (
                                 <div className="bg-white p-8 md:p-12 rounded-[2.5rem] border-2 border-zinc-200 shadow-sm">
@@ -226,11 +209,69 @@ export default function CheckoutPage() {
                                                 Edit
                                             </button>
                                             <button
-                                                onClick={() => {
+                                                onClick={async () => {
+                                                    // 1. Prepare Order Data
+                                                    const orderData = {
+                                                        items: items,
+                                                        total: total,
+                                                        status: 'Processing',
+                                                        user_email: useAuthStore.getState().user?.email || guestEmail,
+                                                        shipping_details: {
+                                                            name: 'John Doe', // In real app, bind to form state
+                                                            address: '123 Industrial Way',
+                                                            city: 'New York',
+                                                            zip: '10001'
+                                                        },
+                                                        created_at: serverTimestamp(),
+                                                        order_id: `WUF-${uuidv4().slice(0, 8).toUpperCase()}`
+                                                    };
+
+                                                    // 2. Save to Firestore
+                                                    try {
+                                                        await addDoc(collection(db, 'orders'), orderData);
+                                                    } catch (e) {
+                                                        console.error("Order save failed", e);
+                                                    }
+
+                                                    // 3. Update Local State & Analytics
                                                     addOrder({
                                                         items: [...items],
                                                         total: total,
                                                     });
+
+                                                    trackEvent('purchase_complete', {
+                                                        order_id: orderData.order_id,
+                                                        value: total,
+                                                        currency: 'GBP',
+                                                        items: items.map(i => ({ id: i.id, title: i.title, quantity: i.quantity }))
+                                                    });
+
+                                                    // 4. Send Confirmation Email (Async/Non-blocking)
+                                                    fetch('/api/emails/send', {
+                                                        method: 'POST',
+                                                        headers: { 'Content-Type': 'application/json' },
+                                                        body: JSON.stringify({
+                                                            to: orderData.user_email,
+                                                            orderData: {
+                                                                orderId: orderData.order_id,
+                                                                customerName: orderData.shipping_details.name,
+                                                                items: items.map(item => ({
+                                                                    title: item.title,
+                                                                    quantity: item.quantity,
+                                                                    price: item.price,
+                                                                    variantTitle: item.variantTitle
+                                                                })),
+                                                                total: total,
+                                                                shippingAddress: {
+                                                                    street: orderData.shipping_details.address,
+                                                                    city: orderData.shipping_details.city,
+                                                                    zip: orderData.shipping_details.zip,
+                                                                    country: 'USA' // Defaulting for now
+                                                                }
+                                                            }
+                                                        })
+                                                    }).catch(err => console.error("Email Trigger Failed:", err));
+
                                                     setStep('success');
                                                 }}
                                                 className="flex-[2] py-5 bg-zinc-900 text-white font-black uppercase tracking-[0.2em] rounded-2xl hover:bg-zinc-800 transition-all shadow-xl"

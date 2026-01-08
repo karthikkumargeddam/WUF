@@ -36,12 +36,11 @@ export default function StepWizard({
 }: StepWizardProps) {
     const handleNext = () => {
         if (currentStep < steps.length && canGoNext) {
-            if (currentStep === steps.length - 1 && onComplete) {
-                onComplete();
-            } else {
-                onNext?.();
-                onStepChange(currentStep + 1);
-            }
+            onNext?.();
+            onStepChange(currentStep + 1);
+        } else if (currentStep === steps.length && onComplete) {
+            // If on last step, trigger completion
+            onComplete();
         }
     };
 
@@ -88,10 +87,10 @@ export default function StepWizard({
                                     onClick={() => onStepChange(stepNumber)}
                                     disabled={stepNumber > currentStep}
                                     className={`w-12 h-12 rounded-full flex items-center justify-center font-black text-sm transition-all ${isCompleted
-                                            ? 'bg-zinc-950 text-white'
-                                            : isActive
-                                                ? 'bg-zinc-950 text-white ring-4 ring-zinc-950/20'
-                                                : 'bg-zinc-100 text-zinc-400'
+                                        ? 'bg-zinc-950 text-white'
+                                        : isActive
+                                            ? 'bg-zinc-950 text-white ring-4 ring-zinc-950/20'
+                                            : 'bg-zinc-100 text-zinc-400'
                                         } ${stepNumber <= currentStep ? 'cursor-pointer hover:scale-110' : 'cursor-not-allowed'}`}
                                 >
                                     {isCompleted ? <Check size={20} /> : stepNumber}

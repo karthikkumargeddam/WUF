@@ -1,6 +1,7 @@
 "use client";
 
 import { useCartStore } from "@/store/cartStore";
+import { useAuthStore } from "@/store/authStore";
 import { X, Trash2, Minus, Plus, ShoppingBag, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -17,6 +18,7 @@ export default function CartDrawer() {
         updateQuantity,
         getCartTotal
     } = useCartStore();
+    const { isAuthenticated } = useAuthStore();
 
     const [mounted, setMounted] = useState(false);
     const [suggestions, setSuggestions] = useState<Product[]>([]);
@@ -143,9 +145,9 @@ export default function CartDrawer() {
                                                     </Link>
                                                     <p className="text-xs font-black text-zinc-950 tracking-tighter">£{(item.price * item.quantity).toFixed(2)}</p>
                                                 </div>
-                                                {item.variantTitle && (
-                                                    <p className="mt-1 text-[10px] font-bold text-zinc-400 uppercase tracking-widest italic">{item.variantTitle}</p>
-                                                )}
+                                                <p className="mt-1 text-[10px] font-bold text-zinc-400 uppercase tracking-widest italic">
+                                                    {item.quantity} Units {item.variantTitle && item.variantTitle !== 'Default Title' ? `• ${item.variantTitle}` : ''}
+                                                </p>
                                             </div>
 
                                             <div className="flex items-center justify-between mt-4">
@@ -196,13 +198,23 @@ export default function CartDrawer() {
                                 <p className="text-[10px] font-bold text-zinc-400 tracking-wider">Freight calculated at deployment confirmation.</p>
                             </div>
 
-                            <Link
-                                href="/checkout"
-                                onClick={closeCart}
-                                className="flex items-center justify-center w-full bg-zinc-950 text-white py-5 rounded-2xl font-black uppercase tracking-[0.3em] text-xs shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.25)] hover:scale-[1.02] transition-all active:scale-95"
-                            >
-                                Initiate Deployment
-                            </Link>
+                            {isAuthenticated ? (
+                                <Link
+                                    href="/checkout"
+                                    onClick={closeCart}
+                                    className="flex items-center justify-center w-full bg-zinc-950 text-white py-5 rounded-2xl font-black uppercase tracking-[0.3em] text-xs shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:shadow-[0_15px_35px_rgba(0,0,0,0.25)] hover:scale-[1.02] transition-all active:scale-95"
+                                >
+                                    Initiate Deployment
+                                </Link>
+                            ) : (
+                                <Link
+                                    href="/login?redirect=/checkout"
+                                    onClick={closeCart}
+                                    className="flex items-center justify-center w-full bg-zinc-900 text-white py-5 rounded-2xl font-black uppercase tracking-[0.3em] text-xs shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:bg-zinc-800 transition-all"
+                                >
+                                    Login to Deploy
+                                </Link>
+                            )}
 
                             <button onClick={closeCart} className="w-full text-center text-[10px] font-black uppercase tracking-widest text-zinc-300 mt-6 hover:text-zinc-950 transition-colors">
                                 Return to Command

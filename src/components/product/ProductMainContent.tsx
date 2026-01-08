@@ -15,6 +15,27 @@ export default function ProductMainContent({ product }: ProductMainContentProps)
     const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(product.variants[0]);
     const [activeTab, setActiveTab] = useState<'description' | 'specs' | 'shipping'>('description');
 
+    // Calculate scale based on size (assumes Option1 is size, which is standard for Shopify)
+    const getSizeScale = (variant: ProductVariant) => {
+        const size = variant.option1?.toLowerCase().trim() || '';
+
+        // Exact matches for abbreviations or keywords
+        if (size === 's' || size === 'xs' || size.includes('small')) return 0.85;
+        if (size === 'm' || size.includes('medium')) return 1;
+        if (size === 'l' || size.includes('large')) return 1.1;
+        if (size === 'xl' || size.includes('x-large')) return 1.2;
+        if (size === '2xl' || size.includes('xxl')) return 1.3;
+        if (size === '3xl' || size.includes('xxxl')) return 1.4;
+        if (size === '4xl' || size.includes('xxxxl')) return 1.5;
+
+        // Detailed fallback for "X Months", "X Years" (Kids)
+        if (size.includes('month') || size.includes('year')) return 0.7;
+
+        return 1;
+    };
+
+    const currentScale = getSizeScale(selectedVariant);
+
     return (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 py-12 md:py-20">
             {/* Left: Gallery */}
@@ -23,6 +44,7 @@ export default function ProductMainContent({ product }: ProductMainContentProps)
                     images={product.images}
                     title={product.title}
                     variantImageId={selectedVariant?.image_id}
+                    scale={currentScale}
                 />
             </div>
 
@@ -125,7 +147,10 @@ export default function ProductMainContent({ product }: ProductMainContentProps)
                                     <div className="grid grid-cols-2 py-3">
                                         <span className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">Metadata Tags</span>
                                         <div className="flex flex-wrap gap-2">
-                                            {product.tags.slice(0, 8).map(tag => (
+                                            {(typeof product.tags === 'string'
+                                                ? (product.tags as string).split(',').map(t => t.trim())
+                                                : Array.isArray(product.tags) ? product.tags : []
+                                            ).slice(0, 8).map(tag => (
                                                 <span key={tag} className="text-[9px] font-black border border-zinc-200 text-zinc-500 px-2 py-0.5 rounded-lg uppercase tracking-widest">{tag}</span>
                                             ))}
                                         </div>

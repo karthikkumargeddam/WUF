@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X, Phone, User } from 'lucide-react';
+import { Menu, X, Phone, User, LogOut } from 'lucide-react';
 import { Collection } from '@/types';
+import { useAuthStore } from '@/store/authStore';
 
 interface MobileMenuProps {
     collections: Collection[];
@@ -11,6 +12,12 @@ interface MobileMenuProps {
 
 export default function MobileMenu({ collections }: MobileMenuProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const { user, isAuthenticated, logout } = useAuthStore();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -79,11 +86,26 @@ export default function MobileMenu({ collections }: MobileMenuProps) {
                             <div className="pt-6 border-t border-zinc-100">
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-4">Account & Support</h3>
                                 <ul className="space-y-4">
-                                    <li>
-                                        <Link href="/login" onClick={toggleMenu} className="flex items-center gap-3 text-lg font-bold text-zinc-900">
-                                            <User size={20} /> Business Login
-                                        </Link>
-                                    </li>
+                                    {mounted && isAuthenticated && user ? (
+                                        <>
+                                            <li>
+                                                <Link href="/dashboard" onClick={toggleMenu} className="flex items-center gap-3 text-lg font-bold text-zinc-900">
+                                                    <User size={20} /> {user.email}
+                                                </Link>
+                                            </li>
+                                            <li>
+                                                <button onClick={() => { logout(); toggleMenu(); }} className="flex items-center gap-3 text-lg font-bold text-red-600 w-full text-left">
+                                                    <LogOut size={20} /> Sign Out
+                                                </button>
+                                            </li>
+                                        </>
+                                    ) : (
+                                        <li>
+                                            <Link href="/login" onClick={toggleMenu} className="flex items-center gap-3 text-lg font-bold text-zinc-900">
+                                                <User size={20} /> Business Login
+                                            </Link>
+                                        </li>
+                                    )}
                                     <li>
                                         <a href="tel:+15551234567" className="flex items-center gap-3 text-lg font-bold text-zinc-900">
                                             <Phone size={20} /> 555-123-4567

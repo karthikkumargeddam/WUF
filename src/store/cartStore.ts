@@ -1,6 +1,9 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { Product } from '@/types';
+import { db } from '@/lib/firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface CartItem extends Product {
     variantId: number; // The specific variant selected
@@ -23,6 +26,8 @@ interface CartState {
     orders: Order[];
     isOpen: boolean;
     addItem: (product: Product, variantId?: number, quantity?: number) => void;
+    addItems: (items: { product: Product; variantId?: number; quantity?: number }[]) => void;
+
     removeItem: (id: number, variantId: number) => void;
     updateQuantity: (id: number, variantId: number, quantity: number) => void;
     clearCart: () => void;
@@ -32,7 +37,20 @@ interface CartState {
     closeCart: () => void;
     getCartTotal: () => number;
     getItemCount: () => number;
+    // Firestore Sync
+    uid: string | null;
+    setUserId: (uid: string | null) => void;
+    mergeCart: (uid: string) => Promise<void>;
 }
+
+// Helper to sync state to Firestore
+const syncToFirestore = async (uid: string, items: CartItem[]) => {
+    try {
+        await setDoc(doc(db, 'users', uid), { cartItems: items }, { merge: true });
+    } catch (e) {
+        console.error("Failed to sync cart:", e);
+    }
+};
 
 export const useCartStore = create<CartState>()(
     persist(
@@ -40,71 +58,106 @@ export const useCartStore = create<CartState>()(
             items: [],
             orders: [],
             isOpen: false,
+            uid: null,
+
+            setUserId: (uid) => set({ uid }),
+
+            mergeCart: async (uid) => {
+                set({ uid });
+                const localItems = get().items;
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', uid));
+                    const serverItems = (userDoc.data()?.cartItems || []) as CartItem[];
+
+                    // Append unique items from local to server
+                    const mergedItems = [...serverItems];
+                    localItems.forEach(localItem => {
+                        const exists = mergedItems.find(s => s.id === localItem.id && s.variantId === localItem.variantId);
+                        if (exists) {
+                            exists.quantity += localItem.quantity;
+                        } else {
+                            mergedItems.push(localItem);
+                        }
+                    });
+
+                    set({ items: mergedItems });
+                    syncToFirestore(uid, mergedItems);
+                } catch (error) {
+                    console.error("Merge cart error:", error);
+                }
+            },
 
             addItem: (product, variantId, quantity = 1) => {
+                get().addItems([{ product, variantId, quantity }]);
+            },
+
+            addItems: (newCartItems) => {
                 set((state) => {
-                    // Default to first variant if none specified
-                    const selectedVariantId = variantId || product.variants[0]?.id || 0;
-                    const selectedVariant = product.variants.find(v => v.id === selectedVariantId) || product.variants[0];
+                    let currentItems = [...state.items];
 
-                    const price = parseFloat(selectedVariant?.price || '0');
-                    const variantTitle = selectedVariant?.title === 'Default Title' ? '' : selectedVariant?.title;
-                    const image = product.images.length > 0 ? product.images[0].src : '';
+                    newCartItems.forEach(({ product, variantId, quantity = 1 }) => {
+                        const selectedVariantId = variantId || product.variants[0]?.id || 0;
+                        const selectedVariant = product.variants.find(v => v.id === selectedVariantId) || product.variants[0];
 
-                    const existingItem = state.items.find(
-                        (item) => item.id === product.id && item.variantId === selectedVariantId
-                    );
+                        const price = parseFloat(selectedVariant?.price || '0');
+                        const variantTitle = selectedVariant?.title === 'Default Title' ? '' : selectedVariant?.title;
+                        const image = product.images.length > 0 ? product.images[0].src : '';
 
-                    if (existingItem) {
-                        return {
-                            items: state.items.map((item) =>
-                                item.id === product.id && item.variantId === selectedVariantId
-                                    ? { ...item, quantity: item.quantity + quantity }
-                                    : item
-                            ),
-                            isOpen: true, // Open cart when item added
-                        };
-                    }
+                        const existingItemIndex = currentItems.findIndex(
+                            (item) => item.id === product.id && item.variantId === selectedVariantId
+                        );
 
-                    return {
-                        items: [
-                            ...state.items,
-                            {
+                        if (existingItemIndex > -1) {
+                            currentItems[existingItemIndex].quantity += quantity;
+                        } else {
+                            currentItems.push({
                                 ...product,
                                 variantId: selectedVariantId,
                                 variantTitle,
                                 quantity,
                                 price,
                                 image,
-                            },
-                        ],
-                        isOpen: true,
-                    };
+                            });
+                        }
+                    });
+
+                    if (state.uid) syncToFirestore(state.uid, currentItems);
+                    return { items: currentItems, isOpen: true };
                 });
             },
 
             removeItem: (id, variantId) => {
-                set((state) => ({
-                    items: state.items.filter((item) => !(item.id === id && item.variantId === variantId)),
-                }));
+                set((state) => {
+                    const newItems = state.items.filter((item) => !(item.id === id && item.variantId === variantId));
+                    if (state.uid) syncToFirestore(state.uid, newItems);
+                    return { items: newItems };
+                });
             },
 
             updateQuantity: (id, variantId, quantity) => {
-                set((state) => ({
-                    items: state.items.map((item) =>
+                set((state) => {
+                    const newItems = state.items.map((item) =>
                         item.id === id && item.variantId === variantId
                             ? { ...item, quantity: Math.max(0, quantity) }
                             : item
-                    ),
-                }));
+                    );
+                    if (state.uid) syncToFirestore(state.uid, newItems);
+                    return { items: newItems };
+                });
             },
 
-            clearCart: () => set({ items: [] }),
+            clearCart: () => {
+                set((state) => {
+                    if (state.uid) syncToFirestore(state.uid, []);
+                    return { items: [] };
+                });
+            },
+
 
             addOrder: (orderData) => {
                 const newOrder: Order = {
                     ...orderData,
-                    id: `ORD-${Math.floor(1000 + Math.random() * 9000)}`,
+                    id: `ORD-${uuidv4().slice(0, 8).toUpperCase()}`,
                     date: new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' }),
                     status: 'Processing',
                 };

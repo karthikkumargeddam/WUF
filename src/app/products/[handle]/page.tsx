@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ChevronRight } from 'lucide-react';
 import ProductMainContent from '@/components/product/ProductMainContent';
 import ProductCard from '@/components/product/ProductCard';
+import ProductViewTracker from '@/components/analytics/ProductViewTracker';
 
 interface Props {
     params: Promise<{ handle: string }>;
@@ -90,6 +91,7 @@ export default async function ProductPage({ params }: Props) {
             </div>
 
             <div className="container mx-auto px-4">
+                <ProductViewTracker product={product} />
                 <ProductMainContent product={product} />
 
                 {/* Related Products Section */}

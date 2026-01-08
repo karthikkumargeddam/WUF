@@ -52,6 +52,7 @@ export default function ProductActions({ product, selectedVariant }: ProductActi
                     product={product}
                     variantId={selectedVariant?.id}
                     className="w-full"
+                    quantity={quantity}
                 />
                 <button
                     onClick={handleAddToCart}
@@ -61,14 +62,28 @@ export default function ProductActions({ product, selectedVariant }: ProductActi
                 </button>
             </div>
 
-            {/* Customize with Logo Button */}
-            <Link
-                href="/bundles/6-item-kickstarter/customize"
-                className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black uppercase tracking-widest text-xs py-5 px-8 rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl mt-4"
-            >
-                <Sparkles size={18} />
-                Customize with Logo
-            </Link>
+            {/* Customize with Logo Button - Only for Bundles */}
+            {/* Customize with Logo Button - Only for Bundles */}
+            {(() => {
+                const tags = product.tags;
+                const hasBundleTag = Array.isArray(tags)
+                    ? tags.some(tag => tag.toLowerCase().includes('bundle'))
+                    : typeof tags === 'string'
+                        ? (tags as string).toLowerCase().includes('bundle')
+                        : false;
+
+                const isBundle = product.product_type?.toLowerCase().includes('bundle') || hasBundleTag;
+
+                return isBundle && (
+                    <Link
+                        href={`/bundles/${product.handle}/customize`}
+                        className="w-full flex items-center justify-center gap-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-black uppercase tracking-widest text-xs py-5 px-8 rounded-2xl hover:from-green-700 hover:to-emerald-700 transition-all duration-300 shadow-lg hover:shadow-xl mt-4"
+                    >
+                        <Sparkles size={18} />
+                        Customize with Logo
+                    </Link>
+                );
+            })()}
 
             <p className="text-[10px] text-zinc-500 text-center mt-3 font-medium italic">
                 Add embroidery or printing to this product • Free design proof included

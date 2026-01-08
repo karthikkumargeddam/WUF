@@ -115,15 +115,7 @@ export default function BundleSummary({ bundle, onEdit }: BundleSummaryProps) {
                     <span>Subtotal</span>
                     <span>£{(bundle.totalPrice / 1.2).toFixed(2)}</span>
                 </div>
-                {bundle.freeLogoIncluded && (
-                    <div className="flex justify-between items-center text-yellow-500 text-xs font-bold">
-                        <span className="flex items-center gap-2">
-                            <Sparkles size={14} />
-                            Free Logo Embroidery Included
-                        </span>
-                        <span>-£{((bundle.items.length * 5.95)).toFixed(2)}</span>
-                    </div>
-                )}
+                {/* Free logo text removed as requested */}
                 <div className="flex justify-between items-center text-zinc-400 text-sm">
                     <span>VAT (20%)</span>
                     <span>£{(bundle.totalPrice - (bundle.totalPrice / 1.2)).toFixed(2)}</span>
