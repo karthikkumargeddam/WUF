@@ -17,9 +17,9 @@ export default function ProductCard({ product }: ProductCardProps) {
     const { isInWishlist, toggleItem } = useWishlistStore();
     const isWishlisted = isInWishlist(product.id);
 
-    const firstVariant = product.variants[0];
+    const firstVariant = product.variants?.[0];
     const price = parseFloat(firstVariant?.price || '0');
-    const image = product.images[0]?.src;
+    const image = product.images?.[0]?.src;
 
     const handleProductClick = () => {
         trackEvent('product_click', {

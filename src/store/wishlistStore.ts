@@ -2,11 +2,11 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 interface WishlistStore {
-    wishlist: number[]; // Array of product IDs
-    addItem: (productId: number) => void;
-    removeItem: (productId: number) => void;
-    isInWishlist: (productId: number) => boolean;
-    toggleItem: (productId: number) => void;
+    wishlist: (number | string)[]; // Array of product IDs
+    addItem: (productId: number | string) => void;
+    removeItem: (productId: number | string) => void;
+    isInWishlist: (productId: number | string) => boolean;
+    toggleItem: (productId: number | string) => void;
 }
 
 export const useWishlistStore = create<WishlistStore>()(
@@ -18,6 +18,7 @@ export const useWishlistStore = create<WishlistStore>()(
             isInWishlist: (productId) => get().wishlist.includes(productId),
             toggleItem: (productId) => {
                 const { wishlist, addItem, removeItem } = get();
+                // Ensure type safety when checking inclusion
                 if (wishlist.includes(productId)) {
                     removeItem(productId);
                 } else {

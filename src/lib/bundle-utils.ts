@@ -10,37 +10,25 @@ export const LOGO_PRICE = 5.95; // Per logo placement
  * Calculate the total price of a bundle including all items and logo customizations
  */
 export function calculateBundlePrice(bundle: Bundle): number {
-    const itemsTotal = bundle.items.reduce((total, item) => {
-        return total + (item.price || 0);
-    }, 0);
+    const baseTotal = bundle.basePrice || 0;
 
     // Add logo customization costs if not free
-    // Logic: Free logo included usually means 1 logo per item is free
-    // Additional placements would cost extra
     const logoTotal = bundle.items.reduce((total, item) => {
-        if (item.logoCustomization && item.logoCustomization.type !== 'none' && item.logoCustomization.placement) {
-            const placements = item.logoCustomization.placement;
+        if (item.logoCustomization && item.logoCustomization.type !== 'none' && item.logoCustomization.placements) {
+            const placements = item.logoCustomization.placements;
 
-            // Logic: If bundle includes free logo, it STRICTLY means 'left-chest' is free.
-            // Any other position (right-chest, back, etc.) is chargeable.
+            // Logic: If bundle includes free logo, first placement per item is free.
+            // Additional positions are chargeable.
+            const taxableCount = bundle.freeLogoIncluded
+                ? Math.max(0, placements.length - 1)
+                : placements.length;
 
-            let itemLogoCost = 0;
-            placements.forEach(p => {
-                if (p === 'left-chest' && bundle.freeLogoIncluded) {
-                    // Free
-                    itemLogoCost += 0;
-                } else {
-                    // Chargeable
-                    itemLogoCost += LOGO_PRICE;
-                }
-            });
-
-            return total + itemLogoCost;
+            return total + (taxableCount * LOGO_PRICE);
         }
         return total;
     }, 0);
 
-    return itemsTotal + logoTotal;
+    return baseTotal + logoTotal;
 }
 
 export const calculateTax = (subtotal: number): number => {
@@ -76,7 +64,7 @@ export function validateBundleCustomization(bundle: Bundle): {
         if (!item.logoCustomization || item.logoCustomization.type === 'none') {
             errors.push(`Item ${index + 1}: Logo customization required`);
         } else {
-            if (item.logoCustomization.placement.length === 0) {
+            if (item.logoCustomization.placements.length === 0) {
                 errors.push(`Item ${index + 1}: Logo placement not selected`);
             }
             if (item.logoCustomization.type === 'text' && !item.logoCustomization.text) {
@@ -118,8 +106,8 @@ export function generateBundleSummary(bundle: Bundle): string {
             if (logo.type === 'text' && logo.text) {
                 lines.push(`    Text: "${logo.text}"`);
             }
-            if (logo.placement.length > 0) {
-                lines.push(`    Placement: ${logo.placement.join(', ')}`);
+            if (logo.placements && logo.placements.length > 0) {
+                lines.push(`    Placement: ${logo.placements.join(', ')}`);
             }
         }
         lines.push('');
@@ -222,7 +210,7 @@ export function createDefaultBundleItem(
         categoryLabel,
         logoCustomization: {
             type: 'none',
-            placement: [],
+            placements: [],
         },
     };
 }

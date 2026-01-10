@@ -8,7 +8,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const slides = [
     {
         id: 1,
-        image: "https://images.unsplash.com/photo-1504384308090-c54be3855833?auto=format&fit=crop&q=80&w=2000",
+        image: "/images/hero/hero_banner_workwear_1767937097397.png",
         title: "Equip the Frontline",
         subtitle: "High-Performance Industrial Wear",
         cta: "Shop Catalog",
@@ -17,7 +17,7 @@ const slides = [
     },
     {
         id: 2,
-        image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000",
+        image: "/images/hero/banner_bulk_orders_1767937808928.png",
         title: "Volume Pricing Available",
         subtitle: "Save up to 40% on Fleet Orders",
         cta: "Get Quote",
@@ -26,12 +26,39 @@ const slides = [
     },
     {
         id: 3,
-        image: "https://images.unsplash.com/photo-1503342394128-c104d54dba01?auto=format&fit=crop&q=80&w=2000",
+        image: "/images/hero/banner_custom_branding_1767937790578.png",
         title: "Custom Branding",
         subtitle: "Your Logo, On Every Uniform",
         cta: "Start Customizing",
-        link: "/bundles/high-vis-safety-bundle",
+        link: "/bundles",
         align: "left"
+    },
+    {
+        id: 4,
+        image: "/images/hero/banner_premium_quality_1767937828740.png",
+        title: "Premium Quality",
+        subtitle: "Crafted for Durability & Comfort",
+        cta: "Explore Quality",
+        link: "/products",
+        align: "center"
+    },
+    {
+        id: 5,
+        image: "/images/hero/banner_fast_delivery_1767938950001.png",
+        title: "Fast Delivery",
+        subtitle: "Speed & Reliability You Can Trust",
+        cta: "Learn More",
+        link: "/policies/shipping",
+        align: "left"
+    },
+    {
+        id: 6,
+        image: "/images/hero/banner_safety_compliance_1767938973390.png",
+        title: "Safety Compliant",
+        subtitle: "Meets OSHA & ANSI Regulations",
+        cta: "View Safety Gear",
+        link: "/collections/high-visibility-bundles",
+        align: "center"
     }
 ];
 

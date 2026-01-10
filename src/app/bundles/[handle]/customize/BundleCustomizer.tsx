@@ -1,234 +1,81 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useBundleStore } from '@/store/bundleStore';
 import { Bundle, BundleItem, Product } from '@/types';
-import { createDefaultBundleItem, calculateBundlePrice } from '@/lib/bundle-utils';
-import StepWizard from '@/components/ui/StepWizard';
+import { calculateBundlePrice } from '@/lib/bundle-utils';
 import BundleSummary from '@/components/bundle/BundleSummary';
 import { useCartStore } from '@/store/cartStore';
 import { useAnalytics } from '@/hooks/useAnalytics';
 import CategoryStep from '@/components/bundle/CategoryStep';
 import BrandingStep from '@/components/bundle/BrandingStep';
+import { Loader2, AlertCircle, ArrowRight, ShieldCheck, Sparkles } from 'lucide-react';
 
 interface BundleCustomizerProps {
     initialProducts: Product[];
     bundleHandle: string;
+    initialBundleConfig: Bundle;
 }
 
-export default function BundleCustomizer({ initialProducts, bundleHandle }: BundleCustomizerProps) {
+export default function BundleCustomizer({ initialProducts, bundleHandle, initialBundleConfig }: BundleCustomizerProps) {
     const router = useRouter();
-
     const { currentBundle, initializeBundle, updateBundleItem, resetBundle } = useBundleStore();
-    const { addItem, addItems } = useCartStore();
+    const { addItem } = useCartStore();
     const { trackEvent } = useAnalytics();
 
     const [currentStep, setCurrentStep] = useState(1);
     const [products] = useState<Product[]>(initialProducts);
+    const [isLoading, setIsLoading] = useState(true);
 
-    // Initialize bundle on mount (or change of handle)
-    // We use useState with initializer to only run once if needed, but useEffect is safer for store sync
-    useState(() => {
+    useEffect(() => {
+        // Clear previous state and initialize with server-fetched config
         resetBundle();
-        const bundleConfig = getBundleConfig(bundleHandle);
-        if (bundleConfig) {
-            initializeBundle(bundleConfig);
-            trackEvent('bundle_start', {
-                bundle_id: bundleConfig.id,
-                bundle_name: bundleConfig.name,
-                base_price: bundleConfig.basePrice
-            });
-        }
-    });
 
-    // Define bundle configs
-    // Note: copied helper from original file
-    function getBundleConfig(handle: string): Bundle | null {
-        const configs: Record<string, Bundle> = {
-            '6-item-kickstarter': {
-                id: '6-item-kickstarter',
-                name: '6 Item Kickstarter Bundle',
-                description: 'Perfect starter bundle for small teams',
-                handle: '6-item-kickstarter',
-                items: [
-                    createDefaultBundleItem('polo-shirts', 'Polo Shirt'),
-                    createDefaultBundleItem('polo-shirts', 'Polo Shirt'),
-                    createDefaultBundleItem('hoodies', 'Hoodie'),
-                    createDefaultBundleItem('hoodies', 'Hoodie'),
-                    createDefaultBundleItem('softshell', 'Softshell Jacket'),
-                    createDefaultBundleItem('softshell', 'Softshell Jacket'),
-                ],
-                basePrice: 299.99,
-                totalPrice: 299.99,
-                freeLogoIncluded: true,
-                maxItems: 6,
-            },
-            '10-item-professional': {
-                id: '10-item-professional',
-                name: '10 Item Professional Bundle',
-                description: 'Complete workwear solution',
-                handle: '10-item-professional',
-                items: [
-                    ...Array(4).fill(null).map(() => createDefaultBundleItem('polo-shirts', 'Polo Shirt')),
-                    ...Array(3).fill(null).map(() => createDefaultBundleItem('hoodies', 'Hoodie')),
-                    ...Array(3).fill(null).map(() => createDefaultBundleItem('softshell', 'Softshell Jacket')),
-                ],
-                basePrice: 499.99,
-                totalPrice: 499.99,
-                freeLogoIncluded: true,
-                maxItems: 10,
-            },
-            '4-fleece-bundle': {
-                id: '4-fleece-bundle',
-                name: '4 Pack Fleece Bundle',
-                description: 'Essential warmth for the team',
-                handle: '4-fleece-bundle',
-                items: [
-                    ...Array(4).fill(null).map(() => createDefaultBundleItem('fleeces', 'Fleece')),
-                ],
-                basePrice: 99.99,
-                totalPrice: 99.99,
-                freeLogoIncluded: true,
-                maxItems: 4,
-            },
-            '4-softshell-bundle': {
-                id: '4-softshell-bundle',
-                name: '4 Pack Softshell Bundle',
-                description: 'Premium outdoor protection',
-                handle: '4-softshell-bundle',
-                items: [
-                    ...Array(4).fill(null).map(() => createDefaultBundleItem('softshell', 'Softshell')),
-                ],
-                basePrice: 149.99,
-                totalPrice: 149.99,
-                freeLogoIncluded: true,
-                maxItems: 4,
-            },
-            '4-hoodie-bundle': {
-                id: '4-hoodie-bundle',
-                name: '4 Pack Hoodie Bundle',
-                description: 'Comfortable workwear staple',
-                handle: '4-hoodie-bundle',
-                items: [
-                    ...Array(4).fill(null).map(() => createDefaultBundleItem('hoodies', 'Hoodie')),
-                ],
-                basePrice: 119.99,
-                totalPrice: 119.99,
-                freeLogoIncluded: true,
-                maxItems: 4,
-            },
-            'hi-vis-bundle-4-1-printed-only': {
-                id: 'hi-vis-bundle-4-1-printed-only',
-                name: 'Hi-Vis Bundle 4+1 (Printed)',
-                description: 'Essential safety wear with custom printing',
-                handle: 'hi-vis-bundle-4-1-printed-only',
-                items: [
-                    ...Array(5).fill(null).map(() => createDefaultBundleItem('hi-vis', 'Hi-Vis Vest')),
-                ],
-                basePrice: 65.00,
-                totalPrice: 65.00,
-                freeLogoIncluded: true,
-                maxItems: 5,
-            },
-        };
+        if (initialBundleConfig) {
+            console.log("Bundle initializing with:", initialBundleConfig.name);
+            console.log("Items count:", initialBundleConfig.items?.length);
 
-        if (configs[handle]) return configs[handle];
-
-        // Generic Fallback for undefined bundles
-        if (handle.includes('bundle')) {
-            let category = 'workwear';
-            let label = 'Workwear Item';
-
-            if (handle.includes('vis') || handle.includes('safety')) {
-                category = 'hi-vis';
-                label = 'Hi-Vis Vest';
-            } else if (handle.includes('hoodie')) {
-                category = 'hoodies';
-                label = 'Hoodie';
-            } else if (handle.includes('polo')) {
-                category = 'polo-shirts';
-                label = 'Polo Shirt';
-            } else if (handle.includes('fleece')) {
-                category = 'fleeces';
-                label = 'Fleece';
-            } else if (handle.includes('softshell')) {
-                category = 'softshell';
-                label = 'Softshell';
+            // Safety check for 0 items - if this happens, we need to know why
+            if (!initialBundleConfig.items || initialBundleConfig.items.length === 0) {
+                console.error("CRITICAL: initialBundleConfig has 0 items for", bundleHandle);
             }
 
-            return {
-                id: handle,
-                name: handle.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-                description: 'Customizable Bundle',
-                handle: handle,
-                items: Array(5).fill(null).map(() => createDefaultBundleItem(category, label)),
-                basePrice: 0,
-                totalPrice: 0,
-                freeLogoIncluded: true,
-                maxItems: 5,
-            };
+            initializeBundle(initialBundleConfig);
+            trackEvent('bundle_start', {
+                bundle_id: initialBundleConfig.id,
+                bundle_name: initialBundleConfig.name,
+            });
         }
-        return null;
+
+        setIsLoading(false);
+    }, [bundleHandle, initialBundleConfig, resetBundle, initializeBundle, trackEvent]);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <Loader2 className="w-8 h-8 text-black animate-spin" />
+            </div>
+        );
     }
 
     if (!currentBundle) {
         return (
-            <div className="min-h-screen flex flex-col items-center justify-center p-8 text-center">
-                <h1 className="text-2xl font-bold mb-4">Bundle Not Found</h1>
-                <p className="text-zinc-600 mb-8">We couldn't find a configuration for this bundle.</p>
+            <div className="min-h-screen bg-white flex flex-col items-center justify-center p-8 text-center">
+                <AlertCircle className="w-12 h-12 text-red-500 mb-4" />
+                <h1 className="text-2xl font-bold text-gray-900 mb-2">Bundle Not Found</h1>
+                <p className="text-gray-600 mb-6">The requested bundle configuration could not be loaded.</p>
                 <button
-                    onClick={() => router.push('/products')}
-                    className="px-6 py-3 bg-zinc-900 text-white rounded-xl"
+                    onClick={() => router.push('/bundles')}
+                    className="px-6 py-3 bg-black text-white font-medium rounded-lg hover:bg-gray-800 transition-colors"
                 >
-                    Browse Bundles
+                    Return to Bundles
                 </button>
             </div>
         );
     }
 
     const categories = Array.from(new Set(currentBundle.items.map(i => i.category)));
-
-    const steps = [
-        ...categories.map((cat, idx) => ({
-            id: idx + 1,
-            title: currentBundle.items.find(i => i.category === cat)?.categoryLabel || cat,
-            description: 'Select Styles'
-        })),
-        { id: categories.length + 1, title: 'Branding', description: 'Add Logo' },
-        { id: categories.length + 2, title: 'Review', description: 'Summary' }
-    ];
-
-    const isCategoryStep = currentStep <= categories.length;
-    const isBrandingStep = currentStep === categories.length + 1;
-    const isReviewStep = currentStep === categories.length + 2;
-
-    const currentCategory = isCategoryStep ? categories[currentStep - 1] : null;
-
-    const isStepValid = () => {
-        if (isCategoryStep && currentCategory) {
-            const categoryItems = currentBundle.items.filter(i => i.category === currentCategory);
-            return categoryItems.every(i => i.productId && i.variantId);
-        }
-        return true;
-    };
-
-    const handleNext = () => {
-        if (!isStepValid()) return;
-        if (currentStep < steps.length) {
-            setCurrentStep(currentStep + 1);
-            trackEvent('bundle_step_complete', {
-                step: currentStep,
-                bundle: currentBundle.id
-            });
-        }
-    };
-
-    const handlePrevious = () => {
-        if (currentStep > 1) {
-            setCurrentStep(currentStep - 1);
-        }
-    };
 
     const handleUpdateAll = (updateFn: (item: BundleItem) => BundleItem) => {
         currentBundle.items.forEach(item => {
@@ -245,14 +92,6 @@ export default function BundleCustomizer({ initialProducts, bundleHandle }: Bund
                 if (product) {
                     addItem(product, item.variantId);
                     addedCount++;
-                } else {
-                    console.error("Bundle Product Not Found:", item.productId, "Available:", products.map(p => p.id));
-                    // Try adding anyway if we have the data in the item (less safe but fallback)
-                    if (item.productTitle && item.price) {
-                        // We can't use addItem safely without full product object usually, 
-                        // but if we are here, something is wrong with ID matching.
-                        // Let's stick to the error for now as current CartStore expects full Product.
-                    }
                 }
             }
         });
@@ -260,69 +99,185 @@ export default function BundleCustomizer({ initialProducts, bundleHandle }: Bund
         if (addedCount > 0) {
             trackEvent('bundle_complete', { bundle: currentBundle.id });
             router.push('/cart');
-        } else {
-            console.error("Failed to add any items to cart - product lookup failed");
-            alert("Unexpected error: Could not find product details. Please try refreshing.");
         }
     };
 
+    const isBundleConfigured = currentBundle.items.every(i => i.productId && i.variantId);
+
+    // Filter products logic
+    const filterProductsByCategory = (category: string): Product[] => {
+        const normalizedCat = category.toLowerCase().replace(/\s+/g, '-');
+
+        if (currentBundle.allowedProducts?.[category]?.length) {
+            const allowedKeywords = currentBundle.allowedProducts[category];
+            return products.filter(p => {
+                const searchStr = `${p.handle || ''} ${p.title || ''} ${p.product_type || ''} ${(p.tags || []).join(' ')}`.toLowerCase();
+                return allowedKeywords.some(k => searchStr.includes(k.toLowerCase()));
+            });
+        }
+
+        const categoryMappings: Record<string, string[]> = {
+            'polo-shirts': ['Polo', 'Top'],
+            'hoodies': ['Hood', 'Sweatshirt'],
+            'sweatshirts': ['Sweatshirt', 'Hood', 'Jumper'],
+            'fleeces': ['Fleece'],
+            'softshell': ['Soft Shell', 'Softshell'],
+            'hi-viz': ['Waistcoat', 'Jacket', 'Vest', 'Hi-Vis'],
+            'workwear': ['Jacket', 'Trousers', 'Waistcoat', 'Soft Shell'],
+            'hospitality': ['Tunic', 'Apron', 'Tabard'],
+            'aprons': ['Apron', 'Tabard'],
+            'beauty': ['Tunic', 'Tabard'],
+            't-shirts': ['T-Shirt', 'T-Shirts', 'Tee'],
+            'knitwear': ['Jumper', 'Cardigan'],
+            'jackets': ['Jacket', 'Jackets', 'Soft Shell', 'Fleece', 'Gilet'],
+            'accessories': ['Beanie', 'Hat', 'Cap'],
+        };
+
+        const filtered = products.filter(p => {
+            const typeUpper = (p.product_type || '').toUpperCase();
+            const mappedTypes = categoryMappings[normalizedCat] || [];
+            if (mappedTypes.some(mt => typeUpper.includes(mt.toUpperCase()))) return true;
+            const searchStr = `${p.title} ${p.handle} ${(p.tags || []).join(' ')}`.toLowerCase();
+            return [normalizedCat, category.toLowerCase()].some(k => searchStr.includes(k));
+        });
+
+        return filtered.length > 0 ? filtered : products;
+    };
+
     return (
-        <div className="min-h-screen bg-white py-12 md:py-20">
-            <div className="container mx-auto px-4">
-                <div className="max-w-5xl mx-auto">
-                    <div className="mb-12 text-center">
-                        <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase italic text-zinc-950 mb-4">
-                            Customize Your <span className="text-gradient">Bundle</span>
-                        </h1>
-                        <p className="text-lg text-zinc-600 font-medium">
-                            {currentBundle.name}
-                        </p>
-                    </div>
+        <div className="min-h-screen bg-gray-50 pb-20">
+            {/* Sticky Mobile Header/Footer for Price */}
+            <div className="lg:hidden sticky top-0 z-50 bg-white border-b px-4 py-3 flex items-center justify-between shadow-sm">
+                <div>
+                    <h2 className="text-sm font-bold text-gray-900 truncate max-w-[200px]">{currentBundle.name}</h2>
+                    <p className="text-xs text-blue-600 font-bold">£{calculateBundlePrice(currentBundle).toFixed(2)}</p>
+                </div>
+                <button
+                    onClick={handleComplete}
+                    disabled={!isBundleConfigured}
+                    className="px-4 py-2 bg-black text-white text-xs font-bold rounded-lg disabled:opacity-50"
+                >
+                    Add to Cart
+                </button>
+            </div>
 
-                    <StepWizard
-                        steps={steps}
-                        currentStep={currentStep}
-                        onStepChange={(step) => {
-                            if (step < currentStep || isStepValid()) {
-                                setCurrentStep(step);
-                            }
-                        }}
-                        canGoNext={isStepValid()}
-                        canGoPrevious={currentStep > 1}
-                        onNext={handleNext}
-                        onPrevious={handlePrevious}
-                        onComplete={handleComplete}
-                        isComplete={isReviewStep}
-                    >
-                        {isCategoryStep && currentCategory && (
-                            <CategoryStep
-                                key={currentCategory}
-                                category={currentCategory}
-                                categoryLabel={currentBundle.items.find(i => i.category === currentCategory)?.categoryLabel || ''}
-                                items={currentBundle.items.filter(i => i.category === currentCategory)}
-                                products={products}
-                                onUpdateItem={updateBundleItem}
-                                onComplete={handleNext}
-                            />
-                        )}
+            <div className="container mx-auto px-4 py-8 md:py-12">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    {/* Left Column: Configuration Sections */}
+                    <div className="lg:col-span-8 space-y-12">
+                        {/* Header Info */}
+                        <div className="mb-8">
+                            <h1 className="text-3xl md:text-5xl font-black text-gray-900 uppercase tracking-tighter leading-none mb-4">
+                                {currentBundle.name}
+                            </h1>
+                            <p className="text-gray-500 text-lg font-medium max-w-2xl">
+                                {currentBundle.description} Configure all items below and add your custom branding in one place.
+                            </p>
+                        </div>
 
-                        {isBrandingStep && (
+                        {/* Branding Section First */}
+                        <div className="bg-white rounded-[2rem] p-8 md:p-12 border border-gray-100 shadow-xl overflow-hidden relative">
+                            <div className="absolute top-0 right-0 p-8 opacity-5">
+                                <Sparkles size={120} />
+                            </div>
                             <BrandingStep
                                 items={currentBundle.items}
                                 onUpdateAll={handleUpdateAll}
-                                onComplete={handleNext}
+                                onComplete={() => { }} // No longer needed for transition
+                                isEmbedded={true}
                             />
-                        )}
+                        </div>
 
-                        {isReviewStep && (
-                            <BundleSummary
-                                bundle={{
-                                    ...currentBundle,
-                                    totalPrice: calculateBundlePrice(currentBundle),
-                                }}
-                            />
-                        )}
-                    </StepWizard>
+                        {/* Items Sections by Category */}
+                        <div className="space-y-16">
+                            {categories.map((cat, idx) => (
+                                <div key={cat} className="space-y-8">
+                                    <div className="flex items-center gap-4">
+                                        <div className="w-12 h-12 rounded-2xl bg-black text-white flex items-center justify-center font-black text-xl shadow-lg">
+                                            {idx + 1}
+                                        </div>
+                                        <div>
+                                            <h2 className="text-2xl font-black text-gray-900 uppercase tracking-tight leading-none">
+                                                {currentBundle.items.find(i => i.category === cat)?.categoryLabel || cat}
+                                            </h2>
+                                            <p className="text-sm font-black text-gray-500 uppercase tracking-widest mt-1">
+                                                Select style & sizes
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <CategoryStep
+                                        category={cat}
+                                        categoryLabel={currentBundle.items.find(i => i.category === cat)?.categoryLabel || ''}
+                                        items={currentBundle.items.filter(i => i.category === cat)}
+                                        products={filterProductsByCategory(cat)}
+                                        onUpdateItem={updateBundleItem}
+                                        onComplete={() => { }} // No longer needed for transition
+                                        isEmbedded={true}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Right Column: Sticky Summary Sidebar */}
+                    <div className="lg:col-span-4 lg:sticky lg:top-8 h-fit space-y-6">
+                        <div className="bg-white rounded-[2rem] p-8 border border-gray-100 shadow-2xl space-y-8">
+                            <div>
+                                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight mb-6">
+                                    Bundle Summary
+                                </h3>
+                                <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                                    <BundleSummary
+                                        bundle={{
+                                            ...currentBundle,
+                                            totalPrice: calculateBundlePrice(currentBundle),
+                                        }}
+                                        isCompact={true}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="pt-8 border-t border-gray-100 space-y-6">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-gray-900 font-black uppercase tracking-widest text-xs">Total Price</span>
+                                    <span className="text-3xl font-black text-gray-900">
+                                        £{calculateBundlePrice(currentBundle).toFixed(2)}
+                                    </span>
+                                </div>
+
+                                <button
+                                    onClick={handleComplete}
+                                    disabled={!isBundleConfigured}
+                                    className="w-full flex items-center justify-center gap-4 py-6 bg-black text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl disabled:opacity-30 disabled:cursor-not-allowed group"
+                                >
+                                    Add Bundle to Cart
+                                    <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                                </button>
+
+                                <div className="flex items-center gap-3 justify-center text-gray-900">
+                                    <ShieldCheck size={16} className="text-blue-600" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest">Secure Configuration</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Status Widget */}
+                        <div className="bg-blue-600 rounded-2xl p-6 text-white shadow-xl">
+                            <div className="flex items-center justify-between mb-2">
+                                <span className="text-xs font-bold uppercase tracking-widest opacity-80">Configuration Status</span>
+                                <span className="text-sm font-black">
+                                    {currentBundle.items.filter(i => i.productId && i.variantId).length} / {currentBundle.items.length}
+                                </span>
+                            </div>
+                            <div className="w-full h-2 bg-white/20 rounded-full overflow-hidden">
+                                <div
+                                    className="h-full bg-white transition-all duration-500 shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                                    style={{ width: `${(currentBundle.items.filter(i => i.productId && i.variantId).length / currentBundle.items.length) * 100}%` }}
+                                />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

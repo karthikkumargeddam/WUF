@@ -58,10 +58,10 @@ export default function StepWizard({
             {/* Progress Bar */}
             <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                    <p className="text-xs font-black uppercase tracking-widest text-zinc-400">
+                    <p className="text-xs font-black uppercase tracking-widest text-zinc-700 dark:text-zinc-300">
                         Step {currentStep} of {steps.length}
                     </p>
-                    <p className="text-xs font-black uppercase tracking-widest text-zinc-400">
+                    <p className="text-xs font-black uppercase tracking-widest text-zinc-700 dark:text-zinc-300">
                         {Math.round(progress)}% Complete
                     </p>
                 </div>
@@ -96,12 +96,12 @@ export default function StepWizard({
                                     {isCompleted ? <Check size={20} /> : stepNumber}
                                 </button>
                                 <div className="mt-3 text-center">
-                                    <p className={`text-xs font-black uppercase tracking-tight ${isActive ? 'text-zinc-900' : 'text-zinc-400'
+                                    <p className={`text-xs font-black uppercase tracking-tight ${isActive ? 'text-zinc-900' : 'text-zinc-700 dark:text-zinc-400'
                                         }`}>
                                         {step.title}
                                     </p>
                                     {step.description && (
-                                        <p className="text-[10px] text-zinc-500 mt-1 hidden md:block">
+                                        <p className="text-[10px] text-zinc-800 dark:text-zinc-300 mt-1 hidden md:block font-medium">
                                             {step.description}
                                         </p>
                                     )}

@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 
 interface AddToCartButtonProps {
     product: Product;
-    variantId?: number;
+    variantId?: number | string;
     className?: string;
     showIconOnly?: boolean;
     quantity?: number;

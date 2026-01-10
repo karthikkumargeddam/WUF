@@ -5,6 +5,8 @@ import { useState } from "react";
 import ProductGallery from "./ProductGallery";
 import ProductOptions from "./ProductOptions";
 import ProductActions from "./ProductActions";
+import ProductSKU from "./ProductSKU";
+import VATDisplay from "./VATDisplay";
 import { Shield, Check, Truck } from "lucide-react";
 
 interface ProductMainContentProps {
@@ -67,16 +69,28 @@ export default function ProductMainContent({ product }: ProductMainContentProps)
                     {product.title}
                 </h1>
 
-                <div className="flex items-baseline gap-4 mb-10">
-                    <span className="text-5xl font-black text-zinc-950 tracking-tighter italic">
-                        <span className="text-gradient">£{selectedVariant?.price || '0.00'}</span>
-                    </span>
-                    {selectedVariant?.compare_at_price && (
-                        <span className="text-2xl text-zinc-300 line-through font-black italic">
-                            £{selectedVariant.compare_at_price}
+                <div className="mb-6">
+                    <div className="flex items-baseline gap-4 mb-3">
+                        <span className="text-5xl font-black text-zinc-950 tracking-tighter italic">
+                            <span className="text-gradient">£{selectedVariant?.price || '0.00'}</span>
                         </span>
-                    )}
-                    <span className="text-zinc-400 font-black text-xs uppercase tracking-widest">Global Credit</span>
+                        {selectedVariant?.compare_at_price && (
+                            <span className="text-2xl text-zinc-300 line-through font-black italic">
+                                £{selectedVariant.compare_at_price}
+                            </span>
+                        )}
+                        <span className="text-zinc-400 font-black text-xs uppercase tracking-widest">Global Credit</span>
+                    </div>
+
+                    {/* VAT Display */}
+                    <VATDisplay
+                        price={parseFloat(selectedVariant?.price || '0')}
+                        tags={product.tags}
+                        className="mb-3"
+                    />
+
+                    {/* SKU Display */}
+                    <ProductSKU sku={selectedVariant?.sku} />
                 </div>
 
                 {/* Status Badges */}

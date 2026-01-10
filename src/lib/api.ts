@@ -5,8 +5,7 @@ const BASE_URL = 'https://wearunifab.com';
 export async function fetchProducts(page: number = 1, limit: number = 250): Promise<ProductsResponse> {
     try {
         const res = await fetch(`${BASE_URL}/products.json?limit=${limit}&page=${page}`, {
-            next: { revalidate: 21600 }, // Cache for 6 hours (increased from 1 hour)
-            cache: 'force-cache',
+            cache: 'no-store',
         });
 
         if (!res.ok) {
@@ -41,8 +40,7 @@ export async function fetchCollections(): Promise<CollectionsResponse> {
 export async function fetchCollectionProducts(handle: string, page: number = 1, limit: number = 250): Promise<ProductsResponse> {
     try {
         const res = await fetch(`${BASE_URL}/collections/${handle}/products.json?limit=${limit}&page=${page}`, {
-            next: { revalidate: 21600 }, // Cache for 6 hours
-            cache: 'force-cache',
+            cache: 'no-store',
         });
 
         if (!res.ok) {
@@ -59,8 +57,7 @@ export async function fetchCollectionProducts(handle: string, page: number = 1, 
 export async function fetchProduct(handle: string): Promise<Product | null> {
     try {
         const res = await fetch(`${BASE_URL}/products/${handle}.json`, {
-            next: { revalidate: 21600 }, // Cache for 6 hours
-            cache: 'force-cache',
+            cache: 'no-store',
         });
 
         if (!res.ok) {
@@ -83,12 +80,33 @@ export async function searchProducts(query: string): Promise<Product[]> {
         // Since we don't have a direct search endpoint, we'll fetch widely and filter.
         const { products } = await fetchProducts(1, 250);
 
-        const lowerQuery = query.toLowerCase();
-        return products.filter(product =>
-            product.title.toLowerCase().includes(lowerQuery) ||
-            product.product_type.toLowerCase().includes(lowerQuery) ||
-            (product.tags && product.tags.some(tag => tag.toLowerCase().includes(lowerQuery)))
-        );
+        const lowerQuery = query.toLowerCase().trim();
+
+        return products.filter(product => {
+            // Search in product title
+            if (product.title.toLowerCase().includes(lowerQuery)) {
+                return true;
+            }
+
+            // Search in product type
+            if (product.product_type.toLowerCase().includes(lowerQuery)) {
+                return true;
+            }
+
+            // Search in tags
+            if (product.tags && product.tags.some(tag => tag.toLowerCase().includes(lowerQuery))) {
+                return true;
+            }
+
+            // Search in SKU codes (deployment SKU)
+            if (product.variants && product.variants.some(variant =>
+                variant.sku && variant.sku.toLowerCase().includes(lowerQuery)
+            )) {
+                return true;
+            }
+
+            return false;
+        });
     } catch (error) {
         console.error(`Error searching products for ${query}:`, error);
         return [];

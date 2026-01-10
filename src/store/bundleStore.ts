@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { Bundle, BundleItem, BundleConfiguration } from '@/types';
+import { Bundle, BundleItem, BundleConfiguration, LogoCustomization } from '@/types';
+import { getAllProducts } from '@/lib/data';
 
 interface BundleStore {
     currentBundle: Bundle | null;
@@ -16,6 +17,8 @@ interface BundleStore {
     setCompletedSteps: (steps: number) => void;
     isItemComplete: (itemId: string) => boolean;
     isBundleComplete: () => boolean;
+    setCategoryBranding: (category: string, branding: any) => void;
+    loadBundleProducts: () => Promise<void>;
 }
 
 export const useBundleStore = create<BundleStore>()(
@@ -102,20 +105,40 @@ export const useBundleStore = create<BundleStore>()(
                 const { currentBundle } = get();
                 if (!currentBundle) return 0;
 
-                const itemsTotal = currentBundle.items.reduce((total, item) => {
-                    return total + (item.price || 0);
-                }, 0);
+                const baseTotal = currentBundle.basePrice || 0;
 
                 // Add logo customization costs if not free
-                const logoTotal = currentBundle.freeLogoIncluded ? 0 : currentBundle.items.reduce((total, item) => {
+                // JRS often includes 1 free placement
+                const logoTotal = currentBundle.items.reduce((total, item) => {
                     if (item.logoCustomization && item.logoCustomization.type !== 'none') {
-                        // Add logo cost per placement (example: £5 per placement)
-                        return total + (item.logoCustomization.placement.length * 5);
+                        const placements = item.logoCustomization.placements || [];
+                        // If freeLogoIncluded, first placement is £0, others are £5
+                        const taxablePlacements = currentBundle.freeLogoIncluded
+                            ? Math.max(0, placements.length - 1)
+                            : placements.length;
+
+                        return total + (taxablePlacements * 5);
                     }
                     return total;
                 }, 0);
 
-                return itemsTotal + logoTotal;
+                return baseTotal + logoTotal;
+            },
+
+            setCategoryBranding: (category: string, branding: Partial<LogoCustomization>) => {
+                const { currentBundle, configuration } = get();
+                if (!currentBundle || !configuration) return;
+
+                const updatedItems = configuration.items.map(item =>
+                    item.category === category
+                        ? { ...item, logoCustomization: { ...(item.logoCustomization || { type: 'none', placements: [] }), ...branding } }
+                        : item
+                );
+
+                set({
+                    currentBundle: { ...currentBundle, items: updatedItems },
+                    configuration: { ...configuration, items: updatedItems }
+                });
             },
 
             resetBundle: () => {
@@ -135,6 +158,17 @@ export const useBundleStore = create<BundleStore>()(
                         completedSteps: steps,
                     },
                 });
+            },
+            // Load products from Shopify (direct API)
+            loadBundleProducts: async () => {
+                const products = await getAllProducts();
+                const productMap: Record<string, any> = {};
+                products.forEach(p => {
+                    productMap[p.id] = p;
+                });
+                set(state => ({
+                    configuration: state.configuration ? { ...state.configuration, products: productMap } : null,
+                }));
             },
 
             isItemComplete: (itemId: string) => {
@@ -171,6 +205,13 @@ export const useBundleStore = create<BundleStore>()(
         }),
         {
             name: 'bundle-storage',
+            partialize: (state) => ({
+                currentBundle: state.currentBundle,
+                configuration: state.configuration ? {
+                    ...state.configuration,
+                    products: undefined // Don't persist large product map
+                } : null,
+            }),
         }
     )
 );

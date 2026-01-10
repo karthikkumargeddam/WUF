@@ -1,4 +1,4 @@
-import { fetchProduct, fetchCollectionProducts } from '@/lib/api';
+import { getProductByHandle, getAllProducts } from '@/lib/data';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
@@ -13,7 +13,7 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const { handle } = await params;
-    const product = await fetchProduct(handle);
+    const product = await getProductByHandle(handle);
 
     if (!product) return { title: 'Product Not Found' };
 
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProductPage({ params }: Props) {
     const { handle } = await params;
-    const product = await fetchProduct(handle);
+    const product = await getProductByHandle(handle);
 
     if (!product) {
         notFound();
@@ -68,7 +68,7 @@ export default async function ProductPage({ params }: Props) {
     // Since we don't have a direct category search by type, 
     // we'll fetch from the collection if possible or just some products.
     // For simplicity, we'll fetch general products and filter by type.
-    const { products: allRelated } = await fetchCollectionProducts('all', 10);
+    const allRelated = await getAllProducts();
     const relatedProducts = allRelated
         .filter(p => p.id !== product.id && p.product_type === product.product_type)
         .slice(0, 4);

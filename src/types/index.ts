@@ -1,6 +1,6 @@
 export interface ProductImage {
-    id: number;
-    product_id: number;
+    id: number | string;
+    product_id: number | string;
     position: number;
     created_at: string;
     updated_at: string;
@@ -8,12 +8,12 @@ export interface ProductImage {
     width: number;
     height: number;
     src: string;
-    variant_ids: number[];
+    variant_ids: (number | string)[];
 }
 
 export interface ProductVariant {
-    id: number;
-    product_id: number;
+    id: number | string;
+    product_id: number | string;
     title: string;
     price: string;
     sku: string;
@@ -30,10 +30,10 @@ export interface ProductVariant {
     taxable: boolean;
     barcode: string | null;
     grams: number;
-    image_id: number | null;
+    image_id: number | string | null;
     weight: number;
     weight_unit: string;
-    inventory_item_id: number;
+    inventory_item_id: number | string;
     quantity_rule: {
         min: number | null;
         max: number | null;
@@ -43,15 +43,15 @@ export interface ProductVariant {
 }
 
 export interface ProductOption {
-    id: number;
-    product_id: number;
+    id: number | string;
+    product_id: number | string;
     name: string;
     position: number;
     values: string[];
 }
 
 export interface Product {
-    id: number;
+    id: number | string;
     title: string;
     handle: string;
     body_html: string;
@@ -67,7 +67,7 @@ export interface Product {
 }
 
 export interface Collection {
-    id: number;
+    id: number | string;
     handle: string;
     title: string;
     updated_at: string;
@@ -97,9 +97,17 @@ export interface CollectionsResponse {
 }
 
 // Bundle Customization Types
+export type LogoPlacementValue = 'left-chest' | 'right-chest' | 'back' | 'nape' | 'sleeve-left' | 'sleeve-right';
+
+export interface LogoPlacement {
+    position: LogoPlacementValue;
+    label: string;
+    price: number;
+}
+
 export interface LogoCustomization {
     type: 'existing' | 'text' | 'upload' | 'none';
-    placement: string[]; // ["left-chest", "back", "sleeve", "right-chest"]
+    placements: LogoPlacementValue[]; // ["left-chest", "back"]
     // For text logos
     text?: string;
     font?: string;
@@ -116,11 +124,12 @@ export interface BundleItem {
     id: string;
     category: string; // "polo-shirts", "hoodies", "jackets", "softshell"
     categoryLabel: string; // Display name
-    productId?: number;
+    productId?: number | string;
     productHandle?: string;
     productTitle?: string;
+    productSku?: string;
     productImage?: string;
-    variantId?: number;
+    variantId?: number | string;
     size?: string;
     color?: string;
     price?: number;
@@ -137,6 +146,7 @@ export interface Bundle {
     totalPrice: number;
     freeLogoIncluded: boolean;
     maxItems: number;
+    allowedProducts?: Record<string, string[]>; // category -> allowed product handles/titles
 }
 
 export interface BundleConfiguration {
@@ -144,4 +154,5 @@ export interface BundleConfiguration {
     items: BundleItem[];
     completedSteps: number;
     totalSteps: number;
+    products?: Record<string, any>; // key = product id
 }

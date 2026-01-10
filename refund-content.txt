@@ -1,0 +1,837 @@
+﻿
+>     <div 
+class="rte">
+          <p>We have 
+a 14-day return 
+policy, which means 
+you have 14 days 
+after receiving your 
+item to request a 
+return.</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">📦<
+/span> Eligibility 
+for Return</b></p>
+  <p class="MsoNormal
+">You may return any 
+item from our 
+<b>standard 
+range</b> within 
+<b>14 days of 
+delivery</b>, 
+provided it meets 
+the following 
+conditions:</p>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">Item is 
+<b>unworn</b>, 
+<b>unused</b>, and 
+<b>unwashed</b>
+  </li>
+  <li style="" class=
+"MsoNormal">Returned 
+in its <b>original 
+packaging with all 
+labels intact</b>
+  </li>
+  <li style="" class=
+"MsoNormal">Free 
+from any odours, 
+stains, or damage 
+(e.g. smoke, food, 
+pets)</li>
+  <li style="" 
+class="MsoNormal">A 
+<b>copy of your 
+order</b> and 
+<b>reason for 
+return</b> is 
+included</li>
+  </ul>
+  <p class="MsoNormal
+"><span style="font-f
+amily:'Segoe UI Emoji
+',sans-serif;">🔁</sp
+an> <b>We do not 
+offer exchanges</b>. 
+To get a different 
+size or item, place 
+a new order through 
+our website.</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">🚫<
+/span> 
+Non-Returnable 
+Items</b></p>
+  <p class="MsoNormal
+">Unless faulty or 
+incorrectly 
+supplied, we 
+<b>cannot accept 
+returns</b> for:</p>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">Items 
+that have been 
+<b>embroidered, 
+printed, or 
+customised</b>
+  </li>
+  <li style="" class=
+"MsoNormal">Items 
+<b>assembled or 
+sourced</b> to your 
+specific 
+requirements</li>
+  <li style="" class=
+"MsoNormal">Items 
+not part of our 
+<b>standard website 
+range</b> (e.g. 
+special colours, 
+extended sizing)</li>
+  </ul>
+  <p class="MsoNormal
+"><span style="font-f
+amily:'Segoe UI Emoji
+',sans-serif;">🛠️</s
+pan> If a customised 
+item is found to be 
+faulty or 
+misprinted, 
+<b>UniFab CustomWear 
+reserves the right 
+to correct or remake 
+the item</b> before 
+issuing any refund, 
+at our sole 
+discretion.</p>
+  <p 
+class="MsoNormal">
+</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">🔁<
+/span> HOW TO RETURN 
+AN ITEM</b></p>
+  <ol style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">Ensure 
+the item meets all 
+return 
+conditions</li>
+  <li style="" class=
+"MsoNormal">Package 
+the item securely, 
+including:</li>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">Original 
+order 
+confirmation</li>
+  <li style="" class=
+"MsoNormal">Written 
+reason for 
+return</li>
+  </ul>
+  <li style="" class=
+"MsoNormal">Send 
+to:</li>
+  </ol>
+  <p style="text-alig
+n:left;" class="MsoNo
+rmal"><b>Returns 
+Dept</b><br>UniFab
+<br>1 Franklin 
+Court<br>Brook 
+Road<br>Borehamwood, 
+Hertfordshire<br>WD6 
+5FL</p>
+  <p class="MsoNormal
+"><span style="font-f
+amily:'Segoe UI Emoji
+',sans-serif;">📦</sp
+an> Returns are at 
+your expense. We do 
+<b>not provide 
+return 
+labels</b>.</p>
+  <p 
+class="MsoNormal">We 
+will cover return 
+carriage costs for 
+<strong>exchanges or 
+refunds</strong> if 
+the return is due to 
+<strong>our 
+error</strong> or 
+the item is <strong>f
+aulty</strong>.<br>Pl
+ease allow up to 
+<strong>15 working 
+days</strong> for 
+returns to be 
+processed.</p>
+  <p class="MsoNormal
+"><br>To start a 
+return, you can 
+contact us at <a href
+="mailto:jilanitrades
+ltd@gmail.com">suppor
+t@wearunifab.com</a>.
+<br><br>Items sent 
+back to us without 
+first requesting a 
+return will not be 
+accepted. 
+<br><br>You can 
+always contact us 
+for any return 
+questions at <a href=
+"mailto:jilanitradesl
+td@gmail.com">support
+@wearunifab.com</a>.
+<br></p>
+  <p 
+class="MsoNormal">
+</p>
+  <h4><strong>Cancell
+ations</strong></h4>
+  <p>Orders 
+cancelled 
+<strong>without a 
+valid 
+reason</strong> more 
+than 
+<strong>4</strong> 
+<strong>hours after 
+purchase</strong> 
+will be subject to 
+the following 
+deductions:</p>
+  <ul>
+  <li>
+  <p><strong>30%</str
+ong> of the original 
+purchase amount</p>
+  </li>
+  <li>
+  <p>A <strong>£15 
+digitisation 
+fee</strong> (if a 
+logo has been 
+processed)</p>
+  </li>
+  </ul>
+  <p>If your logo 
+file has already 
+been received via 
+email, cancellation 
+may still be 
+processed; however, 
+a <strong>full 
+refund will not be 
+issued</strong>. 
+This is due to <stron
+g>non-refundable 
+digitisation 
+work</strong> that 
+have already 
+commenced.</p>
+  <p><strong>Damages 
+and 
+issues</strong></p>
+  <p>Please inspect 
+your order upon 
+reception and 
+contact us 
+immediately at 
+info@wearunifab.com 
+if the item is 
+defective, damaged 
+or if you receive 
+the wrong item, so 
+that we can evaluate 
+the issue and make 
+it right.</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">💳<
+/span> REFUNDS</b><b>
+ </b></p>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" 
+class="MsoNormal">
+  <h5>
+  <b>We will notify 
+you once we’ve 
+received and 
+inspected your 
+return, and let you 
+know if the refund 
+was approved or 
+not</b><br>
+  </h5>
+  </li>
+  <li style="" class=
+"MsoNormal">Refunds 
+are processed 
+<b>within 10 working 
+days</b> of 
+receiving your 
+return</li>
+  <li style="" class=
+"MsoNormal">Once 
+processed, please 
+allow <b>2–5 working 
+days</b> for funds 
+to appear</li>
+  <li>Please 
+remember it can take 
+some time for your 
+bank or credit card 
+company to process 
+and post the refund 
+too.</li>
+  <li style="" class=
+"MsoNormal">Refunds 
+will be issued to 
+the <strong>same 
+payment 
+method</strong> used 
+at the time of 
+purchase.</li>
+  <li style="" class=
+"MsoNormal">Returns 
+during busy periods 
+may take up to <b>15 
+working 
+days</b><b></b>
+  </li>
+  <li style="" 
+class="MsoNormal">If 
+more than 15 
+business days have 
+passed since we’ve 
+approved your 
+return, please 
+contact us at support
+@wearunifab.com</li>
+  </ul>
+  <p> </p>
+  <p><strong>Exceptio
+ns / non-returnable 
+items</strong> 
+<br>Unfortunately, 
+we cannot accept 
+returns on sale 
+items or gift 
+cards.</p>
+  <p><br></p>
+  <p><strong>Exchange
+s</strong> <br>The 
+fastest way to 
+ensure you get what 
+you want is to 
+return the item you 
+have, and once the 
+return is accepted, 
+make a separate 
+purchase for the new 
+item.</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">📦<
+/span> DELIVERY 
+CLAIMS &amp; 
+SHORTAGES</b></p>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">All 
+claims for 
+<b>damage, shortages 
+or non-delivery</b> 
+must be:</li>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">Reported 
+<b>within 48 hours 
+by phone</b>, 
+and</li>
+  <li style="" class=
+"MsoNormal">Confirmed
+ <b>in writing 
+within 3 working 
+days</b> of 
+dispatch</li>
+  </ul>
+  <li style="" class=
+"MsoNormal">All 
+claims must be 
+supported by:</li>
+  <ul style="margin-t
+op:0cm;">
+  <li style="" class=
+"MsoNormal">The 
+courier’s <b>Proof 
+of Delivery 
+(POD)</b><br>
+  </li>
+  <li style="" 
+class="MsoNormal">
+  <p>When your 
+delivery arrives, 
+please check the 
+parcel and mark the 
+<strong>delivery 
+note</strong> (or 
+courier’s device) if 
+there are any 
+issues.</p>
+  <p>Use one of the 
+following terms:</p>
+  <ul>
+  <li>
+  <p><strong>“Uncheck
+ed”</strong> – If 
+you didn’t open the 
+parcel at the time 
+of delivery</p>
+  </li>
+  <li>
+  <p><strong>“Damaged
+”</strong> – If the 
+packaging or items 
+are visibly 
+damaged</p>
+  </li>
+  <li>
+  <p><strong>“Short”<
+/strong> – If any 
+items are missing 
+from your order</p>
+  </li>
+  <li>
+  <p>⚠️ These notes 
+help support any 
+claim you may need 
+to make. Without 
+them, we or the 
+courier may not be 
+able to investigate 
+or offer 
+compensation.</p>
+  </li>
+  </ul>
+  </li>
+  </ul>
+  </ul>
+  <p class="MsoNormal
+"><span style="font-f
+amily:'Segoe UI Emoji
+',sans-serif;">🟡</sp
+an> We <b>cannot be 
+held responsible</b> 
+for lost or damaged 
+parcels if you 
+request the courier 
+to leave them in a 
+"safe place" (e.g. 
+behind bin, in shed, 
+etc.).</p>
+  <p 
+class="MsoNormal">We 
+recommend all 
+deliveries are 
+<b>checked in 
+carefully at 
+arrival</b> to 
+confirm all items 
+have been received 
+correctly.</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">⚖️<
+/span> LEGAL 
+NOTICE</b></p>
+  <p class="MsoNormal
+">This policy does 
+<b>not affect your 
+statutory rights</b> 
+under the Consumer 
+Rights Act 2015 or 
+applicable UK 
+law.</p>
+  <p class="MsoNormal
+"><b><span style="fon
+t-family:'Segoe UI Em
+oji',sans-serif;">📞<
+/span> Need 
+Help?</b></p>
+  <p 
+class="MsoNormal">If 
+you're unsure about 
+your eligibility for 
+return, delivery 
+timelines, or order 
+status, please 
+contact:</p>
+  <p class="MsoNormal
+"><span style="font-f
+amily:'Segoe UI Emoji
+',sans-serif;">📧</sp
+an> <b>support@wearun
+ifab.com</b></p>
+  <p 
+class="MsoNormal">
+</p>
+      </div>
+    </div>
+  </div>
+  
+      </main>
+  
+      <!-- BEGIN 
+sections: 
+footer-group -->
+  <div id="shopify-se
+ction-sections--26294
+637592923__footer" cl
+ass="shopify-section 
+shopify-section-group
+-footer-group">
+  <link href="//wearu
+nifab.com/cdn/shop/t/
+9/assets/section-foot
+er.css?v=603186430987
+53476351756295554" 
+rel="stylesheet" 
+type="text/css" 
+media="all" />
+  <link href="//wearu
+nifab.com/cdn/shop/t/
+9/assets/component-ne
+wsletter.css?v=472725
+328020048526175629555
+3" rel="stylesheet" 
+type="text/css" 
+media="all" />
+  <link href="//wearu
+nifab.com/cdn/shop/t/
+9/assets/component-li
+st-menu.css?v=1519685
+161196787289917562955
+53" rel="stylesheet" 
+type="text/css" 
+media="all" />
+  <link href="//wearu
+nifab.com/cdn/shop/t/
+9/assets/component-li
+st-payment.css?v=6925
+396141077183850175629
+5553" 
+rel="stylesheet" 
+type="text/css" 
+media="all" />
+  <link href="//wearu
+nifab.com/cdn/shop/t/
+9/assets/component-li
+st-social.css?v=35792
+976012981934991756295
+553" 
+rel="stylesheet" 
+type="text/css" 
+media="all" />
+  <style 
+data-shopify>.footer 
+{
+      margin-top: 
+0px;
+    }
+  
+    .section-sections
+--26294637592923__foo
+ter-padding {
+      padding-top: 
+27px;
+      
+padding-bottom: 27px;
+    }
+  
+    @media screen 
+and (min-width: 
+750px) {
+      .footer {
+        margin-top: 
+0px;
+      }
+  
+      .section-sectio
+ns--26294637592923__f
+ooter-padding {
+        padding-top: 
+36px;
+        
+padding-bottom: 36px;
+      }
+    }</style><footer 
+class="footer 
+color-scheme-1 
+gradient section-sect
+ions--26294637592923_
+_footer-padding"><div
+ class="footer__conte
+nt-top 
+page-width"><div
+            class="fo
+oter-block--newslette
+r"
+            
+          ><div class
+="footer-block__newsl
+etter"><h2 class="foo
+ter-block__heading in
+line-richtext">Subscr
+ibe to our 
+emails</h2><form 
+method="post" action=
+"/contact#ContactFoot
+er" 
+id="ContactFooter" ac
+cept-charset="UTF-8" 
+class="footer__newsle
+tter newsletter-form"
+><input 
+type="hidden" 
+name="form_type" 
+value="customer" 
+/><input 
+type="hidden" 
+name="utf8" 
+value="✓" /><input 
+type="hidden" 
+name="contact[tags]" 
+value="newsletter">
+                  
+<div class="newslette
+r-form__field-wrapper
+">
+                    
+<div class="field">
+                     
+ <input
+                     
+   id="NewsletterForm
+--sections--262946375
+92923__footer"
+                     
+   type="email"
+                     
+   
+name="contact[email]"
+                     
+   
+class="field__input"
+                     
+   value=""
+                     
+   
+aria-required="true"
+                     
+   autocorrect="off"
+                     
+   
+autocapitalize="off"
+                     
+   
+autocomplete="email"
+                     
+   
+                     
+   
+placeholder="Email"
+                     
+   required
+                     
+ >
+                     
+ <label 
+class="field__label" 
+for="NewsletterForm--
+sections--26294637592
+923__footer">
+                     
+   Email
+                     
+ </label>
+                     
+ <button
+                     
+   type="submit"
+                     
+   class="newsletter-
+form__button 
+field__button"
+                     
+   name="commit"
+                     
+   id="Subscribe"
+                     
+   aria-label="Subscr
+ibe"
+                     
+ >
+                     
+   <span class="svg-w
+rapper"><svg xmlns="h
+ttp://www.w3.org/2000
+/svg" fill="none" 
+class="icon 
+icon-arrow" 
+viewBox="0 0 14 
+10"><path 
+fill="currentColor" 
+fill-rule="evenodd" 
+d="M8.537.808a.5.5 0 
+0 1 .817-.162l4 
+4a.5.5 0 0 1 0 
+.708l-4 4a.5.5 0 1 
+1-.708-.708L11.793 
+5.5H1a.5.5 0 0 1 
+0-1h10.793L8.646 
+1.354a.5.5 0 0 
+1-.109-.546" clip-rul
+e="evenodd"/></svg>
+  </span>
+                     
+ </button>
+                    <
+/div></div></form></d
+iv><div class="footer
+__follow-on-shop">
+                
+<script 
+defer="defer" async 
+type="module" src="//
+wearunifab.com/cdn/sh
+opifycloud/shop-js/mo
+dules/v2/client.shop-
+follow-button_B6YY9G4
+U.en.esm.js"></script
+>
+  <script 
+defer="defer" async 
+type="module" src="//
+wearunifab.com/cdn/sh
+opifycloud/shop-js/mo
+dules/v2/chunk.common
+_B8yXDTDb.esm.js"></s
+cript>
+  <script 
+defer="defer" async 
+type="module" src="//
+wearunifab.com/cdn/sh
+opifycloud/shop-js/mo
+dules/v2/chunk.modal_
+dvVUSHam.esm.js"></sc
+ript>
+  <script 
+type="module">
+    await import("//w
+earunifab.com/cdn/sho
+pifycloud/shop-js/mod
+ules/v2/client.shop-f
+ollow-button_B6YY9G4U
+.en.esm.js");
+  await import("//wea
+runifab.com/cdn/shopi
+fycloud/shop-js/modul
+es/v2/chunk.common_B8
+yXDTDb.esm.js");
+  await import("//wea
+runifab.com/cdn/shopi
+fycloud/shop-js/modul
+es/v2/chunk.modal_dvV
+USHam.esm.js");
+  
+    
+  </script>
+  
+  
+<shop-follow-button p
+roxy="true"></shop-fo
+llow-button>
+  
+              
+</div></div>
+        </div><div
+      class="footer__
+content-bottom"
+      
+    >
+      <div class="foo
+ter__content-bottom-w
+rapper page-width">
+        <div class="f
+ooter__column 
+footer__localization 
+isolate"><localizatio
+n-form><form 
+method="post" action=
+"/localization" id="F
+ooterCountryForm" acc
+ept-charset="UTF-8" c
+lass="localization-fo
+rm" enctype="multipar
+t/form-data"><input 
+type="hidden" 
+name="form_type" 
+value="localization" 
+/><input 
+type="hidden" 
+name="utf8" 
+value="✓" /><input 
+type="hidden" 
+name="_method" 
+value="put" /><input 
+type="hidden" 
+name="return_to" valu
+e="/policies/refund-p
+olicy" /><div>
+                  
+<h2 
+class="caption-large 
+text-body" id="Footer
+CountryLabel">Country
+/region</h2>
+  
+  <div 
+class="disclosure">
+    <button
+      type="button"
+      class="disclosu
+re__button localizati
+on-form__select local
+ization-selector 
+link link--text 
+caption-large"
+      
+aria-expanded="false"
+
+

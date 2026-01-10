@@ -1,4 +1,4 @@
-import { fetchProducts } from '@/lib/api';
+import { getAllProducts } from '@/lib/data';
 import ProductCard from '@/components/product/ProductCard';
 import Pagination from '@/components/ui/Pagination';
 import ProductFilters from '@/components/product/ProductFilters';
@@ -22,9 +22,8 @@ export default async function ProductsPage({ searchParams }: Props) {
     const vendorFilter = typeof params.vendor === 'string' ? params.vendor : null;
     const sortFilter = typeof params.sort === 'string' ? params.sort : 'newest';
 
-    // Fetch a large batch to perform filtering
-    const limit = 250;
-    const { products: allProducts } = await fetchProducts(1, limit);
+    // Fetch all products directly from Shopify
+    const allProducts = await getAllProducts();
 
     // Get unique categories and vendors for filters from the full list
     const categories = Array.from(new Set(allProducts.map(p => p.product_type))).sort();

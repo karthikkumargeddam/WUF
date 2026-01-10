@@ -1,137 +1,101 @@
 "use client";
 
 import { Bundle } from '@/types';
-import { Package, Sparkles, Edit2 } from 'lucide-react';
+import { Check, Edit2 } from 'lucide-react';
 
 interface BundleSummaryProps {
     bundle: Bundle;
     onEdit?: (itemId: string) => void;
+    isCompact?: boolean;
 }
 
-export default function BundleSummary({ bundle, onEdit }: BundleSummaryProps) {
+export default function BundleSummary({ bundle, onEdit, isCompact }: BundleSummaryProps) {
     const completedItems = bundle.items.filter(item =>
-        item.productId && item.variantId && item.logoCustomization
+        item.productId && item.variantId
     );
 
-    const progress = (completedItems.length / bundle.items.length) * 100;
-
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h3 className="text-xl font-black uppercase tracking-tight text-zinc-900">
-                    Bundle Summary
-                </h3>
-                <div className="text-right">
-                    <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
-                        Progress
-                    </p>
-                    <p className="text-2xl font-black text-zinc-950">
-                        {completedItems.length}/{bundle.items.length}
-                    </p>
+        <div className={isCompact ? "space-y-4" : "space-y-8"}>
+            {!isCompact && (
+                <div className="flex items-center justify-between border-b pb-4">
+                    <h3 className="text-xl font-bold text-gray-900">Bundle Summary</h3>
+                    <span className="text-sm text-gray-500">
+                        {completedItems.length} / {bundle.items.length} Items Configured
+                    </span>
                 </div>
-            </div>
+            )}
 
-            {/* Progress Bar */}
-            <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
-                <div
-                    className="h-full bg-zinc-950 transition-all duration-500"
-                    style={{ width: `${progress}%` }}
-                />
-            </div>
-
-            {/* Items List */}
-            <div className="space-y-4">
+            <div className="grid grid-cols-1 gap-3">
                 {bundle.items.map((item, index) => {
-                    const isComplete = !!(item.productId && item.variantId && item.logoCustomization);
+                    const isComplete = !!(item.productId && item.variantId);
+                    const hasBranding = item.logoCustomization && item.logoCustomization.type !== 'none';
 
                     return (
                         <div
                             key={item.id}
-                            className={`p-6 rounded-2xl border-2 transition-all ${isComplete
-                                ? 'border-zinc-950 bg-zinc-50'
-                                : 'border-zinc-200 bg-white'
+                            className={`flex items-start justify-between p-3 rounded-xl border transition-all duration-300 ${isComplete ? 'bg-white border-gray-100 shadow-sm' : 'bg-gray-50/50 border-gray-100 border-dashed'
                                 }`}
                         >
-                            <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-3 mb-2">
-                                        <Package size={20} className={isComplete ? 'text-zinc-950' : 'text-zinc-400'} />
-                                        <h4 className="text-sm font-black uppercase tracking-tight text-zinc-900">
-                                            Item {index + 1}: {item.categoryLabel}
-                                        </h4>
-                                    </div>
-
-                                    {isComplete ? (
-                                        <div className="space-y-2 ml-8">
-                                            <p className="text-xs font-bold text-zinc-700">
-                                                {item.productTitle}
-                                            </p>
-                                            <div className="flex gap-4 text-xs text-zinc-600">
-                                                <span>Size: <strong>{item.size}</strong></span>
-                                                <span>Color: <strong>{item.color}</strong></span>
-                                            </div>
-                                            {item.logoCustomization && (
-                                                <div className="text-xs text-zinc-600">
-                                                    Logo: <strong className="capitalize">{item.logoCustomization.type}</strong>
-                                                    {item.logoCustomization.text && ` - "${item.logoCustomization.text}"`}
-                                                    {item.logoCustomization.placement.length > 0 && (
-                                                        <span className="ml-2">
-                                                            ({item.logoCustomization.placement.join(', ')})
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            )}
-                                            {item.price && (
-                                                <p className="text-lg font-black text-zinc-950">
-                                                    £{item.price.toFixed(2)}
-                                                </p>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <p className="text-xs text-zinc-500 ml-8">
-                                            Not configured yet
-                                        </p>
-                                    )}
+                            <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2 mb-1">
+                                    <span className="flex items-center justify-center w-5 h-5 rounded-lg bg-gray-900 text-[10px] font-black text-white">
+                                        {index + 1}
+                                    </span>
+                                    <h4 className="font-black text-xs text-gray-500 uppercase tracking-widest truncate">{item.categoryLabel}</h4>
                                 </div>
 
-                                {onEdit && isComplete && (
-                                    <button
-                                        onClick={() => onEdit(item.id)}
-                                        className="p-2 hover:bg-zinc-100 rounded-lg transition-colors"
-                                        aria-label="Edit item"
-                                    >
-                                        <Edit2 size={16} className="text-zinc-600" />
-                                    </button>
+                                {isComplete ? (
+                                    <div className="space-y-0.5">
+                                        <p className="text-xs font-black text-gray-900 leading-tight line-clamp-1">{item.productTitle}</p>
+                                        <p className="text-[10px] text-gray-900 font-bold uppercase tracking-tight">
+                                            {item.size} • {item.color}
+                                        </p>
+
+                                        {hasBranding && item.logoCustomization && (
+                                            <div className="mt-1.5 flex items-center gap-1.5">
+                                                <div className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse" />
+                                                <span className="text-[9px] font-black text-blue-600 uppercase tracking-widest">
+                                                    Custom Logo Added
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Pending Selection</p>
                                 )}
                             </div>
+
+                            {onEdit && (
+                                <button
+                                    onClick={() => onEdit(item.id)}
+                                    className="p-1.5 text-gray-900 hover:text-black transition-colors"
+                                    aria-label="Edit item"
+                                >
+                                    <Edit2 size={14} />
+                                </button>
+                            )}
+
+                            {isComplete && !onEdit && (
+                                <div className="text-green-600 p-1">
+                                    <Check size={14} className="stroke-[3]" />
+                                </div>
+                            )}
                         </div>
                     );
                 })}
             </div>
 
-            {/* Total Price & Breakdown */}
-            <div className="bg-zinc-950 rounded-2xl p-8 text-white space-y-4">
-                <div className="flex justify-between items-center text-zinc-400 text-sm">
-                    <span>Subtotal</span>
-                    <span>£{(bundle.totalPrice / 1.2).toFixed(2)}</span>
-                </div>
-                {/* Free logo text removed as requested */}
-                <div className="flex justify-between items-center text-zinc-400 text-sm">
-                    <span>VAT (20%)</span>
-                    <span>£{(bundle.totalPrice - (bundle.totalPrice / 1.2)).toFixed(2)}</span>
-                </div>
-                <div className="border-t border-zinc-800 pt-4 flex justify-between items-end">
+            {!isCompact && (
+                <div className="bg-gray-900 text-white rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-6">
                     <div>
-                        <p className="text-xs font-bold text-zinc-400 uppercase tracking-widest mb-1">
-                            Total Bundle Price
-                        </p>
-                        <p className="text-4xl font-black tracking-tighter italic">
-                            £{bundle.totalPrice.toFixed(2)}
-                        </p>
+                        <h4 className="text-lg font-bold">Total Price</h4>
+                        <p className="text-gray-400 text-sm">Including all items and customization</p>
                     </div>
-                    <Sparkles size={48} className="text-zinc-800" />
+                    <div className="text-3xl font-bold">
+                        £{bundle.totalPrice.toFixed(2)}
+                    </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 }

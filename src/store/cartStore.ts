@@ -6,7 +6,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { v4 as uuidv4 } from 'uuid';
 
 export interface CartItem extends Product {
-    variantId: number; // The specific variant selected
+    variantId: number | string; // The specific variant selected
     variantTitle?: string;
     quantity: number;
     price: number; // Stored as number for calc
@@ -25,11 +25,11 @@ interface CartState {
     items: CartItem[];
     orders: Order[];
     isOpen: boolean;
-    addItem: (product: Product, variantId?: number, quantity?: number) => void;
-    addItems: (items: { product: Product; variantId?: number; quantity?: number }[]) => void;
+    addItem: (product: Product, variantId?: number | string, quantity?: number) => void;
+    addItems: (items: { product: Product; variantId?: number | string; quantity?: number }[]) => void;
 
-    removeItem: (id: number, variantId: number) => void;
-    updateQuantity: (id: number, variantId: number, quantity: number) => void;
+    removeItem: (id: number | string, variantId: number | string) => void;
+    updateQuantity: (id: number | string, variantId: number | string, quantity: number) => void;
     clearCart: () => void;
     addOrder: (order: Omit<Order, 'id' | 'date' | 'status'>) => void;
     toggleCart: () => void;

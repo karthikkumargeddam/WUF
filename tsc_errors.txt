@@ -1,0 +1,35 @@
+src/app/cart/page.tsx(71,79): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/app/cart/page.tsx(79,79): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/app/cart/page.tsx(87,71): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/app/checkout/page.tsx(322,37): error TS2322: Type '{ id: string | number; name: string; price: number; quantity: number; tags: string[]; }[]' is not assignable to type '{ id: string; name: string; price: number; quantity: number; tags?: string[] | undefined; }[]'.
+  Type '{ id: string | number; name: string; price: number; quantity: number; tags: string[]; }' is not assignable to type '{ id: string; name: string; price: number; quantity: number; tags?: string[] | undefined; }'.
+    Types of property 'id' are incompatible.
+      Type 'string | number' is not assignable to type 'string'.
+        Type 'number' is not assignable to type 'string'.
+src/app/wishlist/page.tsx(29,86): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/components/bundle/CategoryStep.tsx(69,17): error TS2322: Type 'string | number' is not assignable to type 'number | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/components/cart/CartDrawer.tsx(159,87): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/components/cart/CartDrawer.tsx(167,87): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/components/cart/CartDrawer.tsx(176,79): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/components/product/ProductActions.tsx(22,26): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/components/product/ProductActions.tsx(53,21): error TS2322: Type 'string | number | undefined' is not assignable to type 'number | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/components/product/ProductCard.tsx(18,39): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/components/product/ProductCard.tsx(56,20): error TS2345: Argument of type 'string | number' is not assignable to parameter of type 'number'.
+  Type 'string' is not assignable to type 'number'.
+src/components/product/ProductMainContent.tsx(51,21): error TS2322: Type 'string | number | null' is not assignable to type 'number | null | undefined'.
+  Type 'string' is not assignable to type 'number'.
+src/components/product/ProductMainContent.tsx(88,79): error TS2339: Property 'split' does not exist on type 'never'.
+src/components/product/ProductMainContent.tsx(88,94): error TS7006: Parameter 't' implicitly has an 'any' type.
+src/store/cartStore.ts(115,33): error TS2322: Type 'string | number' is not assignable to type 'number'.
+  Type 'string' is not assignable to type 'number'.

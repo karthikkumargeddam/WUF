@@ -143,7 +143,10 @@ export default function CartDrawer() {
                                                     <Link href={`/products/${item.handle}`} onClick={closeCart} className="text-xs font-black uppercase text-zinc-950 hover:underline underline-offset-4 decoration-zinc-300 line-clamp-2 pr-4 tracking-tight">
                                                         {item.title}
                                                     </Link>
-                                                    <p className="text-xs font-black text-zinc-950 tracking-tighter">£{(item.price * item.quantity).toFixed(2)}</p>
+                                                    <div className="text-right">
+                                                        <p className="text-xs font-black text-zinc-950 tracking-tighter">£{(item.price * item.quantity).toFixed(2)}</p>
+                                                        <p className="text-[9px] font-bold text-zinc-500">£{item.price.toFixed(2)} each</p>
+                                                    </div>
                                                 </div>
                                                 <p className="mt-1 text-[10px] font-bold text-zinc-400 uppercase tracking-widest italic">
                                                     {item.quantity} Units {item.variantTitle && item.variantTitle !== 'Default Title' ? `• ${item.variantTitle}` : ''}

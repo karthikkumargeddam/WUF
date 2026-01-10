@@ -5,6 +5,7 @@ import HomeBanner from '@/components/home/HomeBanner';
 import OffersSection from '@/components/home/OffersSection';
 import ServiceBar from '@/components/home/ServiceBar';
 import ChatWidget from '@/components/chat/ChatWidget';
+import BundlesPromo from '@/components/home/BundlesPromo';
 
 export default function Home() {
   return (
@@ -14,6 +15,9 @@ export default function Home() {
 
       {/* Quick Service Links */}
       <ServiceBar />
+
+      {/* Bundles Promotional Section */}
+      <BundlesPromo />
 
       {/* Deals & Offers */}
       <OffersSection />

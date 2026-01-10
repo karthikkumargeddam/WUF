@@ -12,6 +12,8 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuthStore } from "@/store/authStore";
 import { useProfile } from "@/hooks/useProfile";
 import ShippingForm from "@/components/checkout/ShippingForm";
+import CheckoutVATSummary from "@/components/checkout/CheckoutVATSummary";
+import { calculateCartTotal } from "@/lib/vat";
 import { v4 as uuidv4 } from 'uuid';
 
 type Step = 'shipping' | 'payment' | 'review' | 'success';
@@ -57,9 +59,18 @@ export default function CheckoutPage() {
     }
 
     const subtotal = getCartTotal();
-    const shipping = subtotal > 500 ? 0 : 25;
-    const tax = subtotal * 0.08; // 8% tax simulation
-    const total = subtotal + shipping + tax;
+    const deliveryFee = subtotal > 150 ? 0 : 5; // Free delivery over £150
+
+    // Calculate VAT using proper UK tax system
+    const cartItems = items.map(item => ({
+        id: item.id,
+        name: item.title,
+        price: item.price,
+        quantity: item.quantity,
+        tags: item.tags || [],
+    }));
+
+    const { total, vatBreakdown } = calculateCartTotal(cartItems, deliveryFee);
 
     return (
         <div className="bg-zinc-50 min-h-screen py-12 md:py-20">
@@ -307,36 +318,11 @@ export default function CheckoutPage() {
                         {/* Order Summary Sidebar */}
                         {step !== 'success' && (
                             <div className="lg:col-span-1">
-                                <div className="bg-white p-8 rounded-[2.5rem] border-2 border-zinc-100 shadow-sm sticky top-32">
-                                    <h3 className="text-xl font-black text-zinc-950 uppercase tracking-tighter mb-6">Financial Summary</h3>
-                                    <div className="space-y-4">
-                                        <div className="flex justify-between text-zinc-600 font-medium">
-                                            <span>Subtotal</span>
-                                            <span className="font-black text-zinc-900">£{subtotal.toFixed(2)}</span>
-                                        </div>
-                                        <div className="flex justify-between text-zinc-600 font-medium">
-                                            <span>Logistic Freight</span>
-                                            <span className="font-black text-zinc-900">{shipping === 0 ? 'FREE' : `£${shipping.toFixed(2)}`}</span>
-                                        </div>
-                                        <div className="flex justify-between text-zinc-600 font-medium">
-                                            <span>Operational Tax (8%)</span>
-                                            <span className="font-black text-zinc-900">£{tax.toFixed(2)}</span>
-                                        </div>
-                                        <div className="h-px bg-zinc-100 my-4" />
-                                        <div className="flex justify-between text-lg">
-                                            <span className="font-black text-zinc-950 uppercase tracking-tight">Total Payable</span>
-                                            <span className="font-black text-zinc-950 underline underline-offset-4 decoration-zinc-300 decoration-4">£{total.toFixed(2)}</span>
-                                        </div>
-                                    </div>
-
-                                    <div className="mt-8 p-4 bg-zinc-50 rounded-xl border border-zinc-100">
-                                        <div className="flex items-center gap-3 text-zinc-500 mb-2">
-                                            <Ship size={16} />
-                                            <span className="text-[10px] font-black uppercase tracking-widest">Global Logistics Support</span>
-                                        </div>
-                                        <p className="text-[10px] text-zinc-400 font-medium leading-tight">Your data is secured using 256-bit industrial encryption. Deployment scheduled within 48 hours of confirmation.</p>
-                                    </div>
-                                </div>
+                                <CheckoutVATSummary
+                                    items={cartItems}
+                                    deliveryFee={deliveryFee}
+                                    className="sticky top-32"
+                                />
                             </div>
                         )}
                     </div>

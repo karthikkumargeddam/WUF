@@ -8,7 +8,7 @@ import { User } from "lucide-react";
 interface ProductGalleryProps {
     images: ProductImage[];
     title: string;
-    variantImageId?: number | null;
+    variantImageId?: number | string | null;
     scale?: number;
 }
 

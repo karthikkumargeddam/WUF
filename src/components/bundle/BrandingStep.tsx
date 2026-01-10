@@ -1,168 +1,109 @@
 "use client";
 
-import { useState } from 'react';
+import { useBundleStore } from '@/store/bundleStore';
 import { BundleItem, LogoCustomization } from '@/types';
-import { Upload, Type, Check, X, CheckCircle } from 'lucide-react';
-import Image from 'next/image';
+import LogoSelector from './LogoSelector';
+import { Sparkles, ArrowRight, ShieldCheck } from 'lucide-react';
 
 interface BrandingStepProps {
     items: BundleItem[];
     onUpdateAll: (updateFn: (item: BundleItem) => BundleItem) => void;
     onComplete: () => void;
+    isEmbedded?: boolean;
 }
 
-export default function BrandingStep({ items, onUpdateAll, onComplete }: BrandingStepProps) {
-    // Local state for the "Global" logo setting
-    const [logoType, setLogoType] = useState<LogoCustomization['type']>('none');
-    const [logoFile, setLogoFile] = useState<File | null>(null);
-    const [logoText, setLogoText] = useState('');
-    const [positions, setPositions] = useState<string[]>([]);
+export default function BrandingStep({ items, onUpdateAll, onComplete, isEmbedded }: BrandingStepProps) {
+    const { setCategoryBranding } = useBundleStore();
 
-    const handleApply = () => {
-        // Construct the customization object
-        const customization: LogoCustomization = {
-            type: logoType,
-            placement: positions,
-            text: logoText || undefined,
-            // In a real app, we'd upload the file here and get a URL.
-            // For now, we simulate a URL or base64
-            fileUrl: logoFile ? URL.createObjectURL(logoFile) : undefined,
-            fileName: logoFile?.name,
-        };
+    // Group items by category to allow category-level branding
+    const categoriesSorted = Array.from(new Set(items.map(i => i.category)));
 
-        // Apply to ALL items
+    const handleApplyAll = (branding: Partial<LogoCustomization>) => {
         onUpdateAll((item) => ({
             ...item,
-            logoCustomization: customization
+            logoCustomization: { ...(item.logoCustomization || { type: 'none', placements: [] }), ...branding }
         }));
-
-        onComplete();
-    };
-
-    const togglePosition = (pos: string) => {
-        setPositions(prev =>
-            prev.includes(pos) ? prev.filter(p => p !== pos) : [...prev, pos]
-        );
     };
 
     return (
-        <div className="space-y-8">
-            <div className="text-center">
-                <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 mb-2">
-                    Add Your Branding
-                </h3>
-                <p className="text-zinc-600 max-w-lg mx-auto">
-                    Upload your logo or add text. We'll apply this to all standard positions (Left Chest) by default.
-                </p>
-            </div>
+        <div className={isEmbedded ? "space-y-8" : "space-y-16"}>
+            {!isEmbedded && (
+                <div className="text-center space-y-4">
+                    <h3 className="text-3xl md:text-4xl font-bold uppercase tracking-tight text-gray-900 leading-none">
+                        Customize <span className="text-blue-600">Your Bundle</span>
+                    </h3>
+                    <p className="text-gray-500 font-medium text-sm max-w-lg mx-auto leading-relaxed">
+                        Add your logo to your items. You can apply the same logo settings to all matching items or customize them individually based on category.
+                    </p>
+                </div>
+            )}
 
-            {/* Type Selector */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button
-                    onClick={() => setLogoType('upload')}
-                    className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 ${logoType === 'upload' ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 hover:border-zinc-300'
-                        }`}
-                >
-                    <Upload size={32} />
-                    <span className="font-bold uppercase tracking-widest text-sm">Upload Logo</span>
-                </button>
-
-                <button
-                    onClick={() => setLogoType('text')}
-                    className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 ${logoType === 'text' ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 hover:border-zinc-300'
-                        }`}
-                >
-                    <Type size={32} />
-                    <span className="font-bold uppercase tracking-widest text-sm">Text Logo</span>
-                </button>
-
-                <button
-                    onClick={() => setLogoType('none')}
-                    className={`p-6 rounded-2xl border-2 transition-all flex flex-col items-center gap-4 ${logoType === 'none' ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 hover:border-zinc-300'
-                        }`}
-                >
-                    <X size={32} />
-                    <span className="font-bold uppercase tracking-widest text-sm">No Branding</span>
-                </button>
-            </div>
-
-            {/* Inputs */}
-            <div className="bg-zinc-50 rounded-2xl p-8 border border-zinc-100">
-                {logoType === 'upload' && (
-                    <div className="text-center space-y-4">
-                        <div className="border-2 border-dashed border-zinc-300 rounded-xl p-8 hover:bg-white transition-colors cursor-pointer relative">
-                            <input
-                                type="file"
-                                accept="image/*"
-                                className="absolute inset-0 opacity-0 cursor-pointer"
-                                onChange={(e) => setLogoFile(e.target.files?.[0] || null)}
-                            />
-                            {logoFile ? (
-                                <div className="flex flex-col items-center text-green-600">
-                                    <CheckCircle size={48} className="mb-2" />
-                                    <p className="font-bold">{logoFile.name}</p>
-                                </div>
-                            ) : (
-                                <div className="flex flex-col items-center text-zinc-400">
-                                    <Upload size={48} className="mb-2" />
-                                    <p className="font-bold text-sm">Click or Drag to Upload</p>
-                                    <p className="text-xs">JPG, PNG, PDF, AI (Max 10MB)</p>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                )}
-
-                {logoType === 'text' && (
-                    <div className="space-y-4">
-                        <label className="block text-xs font-bold uppercase text-zinc-500">Logo Text</label>
-                        <input
-                            type="text"
-                            value={logoText}
-                            onChange={(e) => setLogoText(e.target.value)}
-                            placeholder="Enter your company name..."
-                            className="w-full p-4 rounded-xl border border-zinc-300 font-bold focus:ring-2 focus:ring-zinc-900 outline-none"
-                        />
-                    </div>
-                )}
-
-                {logoType === 'none' && (
-                    <div className="text-center text-zinc-500 py-8 italic">
-                        Your items will be supplied plain without customization.
-                    </div>
-                )}
-            </div>
-
-            {/* Placement - Only if logo selected */}
-            {logoType !== 'none' && (
-                <div>
-                    <h4 className="font-black text-center uppercase tracking-tight text-zinc-900 mb-6">Choose Placement</h4>
-                    <div className="flex justify-center flex-wrap gap-4">
-                        {['Left Chest', 'Right Chest', 'Back', 'Right Sleeve', 'Left Sleeve'].map(pos => {
-                            const isActive = positions.includes(pos.toLowerCase().replace(' ', '-'));
-                            return (
-                                <button
-                                    key={pos}
-                                    onClick={() => togglePosition(pos.toLowerCase().replace(' ', '-'))}
-                                    className={`px-6 py-3 rounded-full border-2 font-bold text-sm transition-all ${isActive ? 'border-zinc-900 bg-zinc-900 text-white' : 'border-zinc-200 text-zinc-500 hover:border-zinc-400'
-                                        }`}
-                                >
-                                    {pos}
-                                </button>
-                            );
-                        })}
+            {isEmbedded && (
+                <div className="flex items-center justify-between mb-8 border-b border-gray-100 pb-6">
+                    <h3 className="text-xl font-black text-gray-900 uppercase tracking-tight">
+                        Bundle Branding
+                    </h3>
+                    <div className="flex items-center gap-2 px-3 py-1 bg-blue-50 text-blue-600 rounded-full">
+                        <ShieldCheck size={14} className="stroke-[3]" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-blue-700">Logo Included</span>
                     </div>
                 </div>
             )}
 
-            {/* Action */}
-            <button
-                onClick={handleApply}
-                disabled={logoType !== 'none' && !logoFile && !logoText}
-                className="w-full py-5 bg-gradient-to-r from-zinc-900 to-zinc-800 text-white rounded-xl font-black uppercase tracking-widest hover:shadow-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-                Start Production
-            </button>
+            <div className={isEmbedded ? "space-y-8" : "space-y-12"}>
+                {categoriesSorted.map((cat, idx) => {
+                    const firstItem = items.find(i => i.category === cat);
+                    const label = firstItem?.categoryLabel || cat;
+                    const currentBranding = firstItem?.logoCustomization || { type: 'none', placements: [] };
+
+                    return (
+                        <div key={cat} className="relative">
+                            {/* Step Indicator Connector */}
+                            {!isEmbedded && idx < categoriesSorted.length - 1 && (
+                                <div className="absolute left-1/2 top-full w-px h-12 bg-gray-200 -z-10" />
+                            )}
+
+                            <div className="flex flex-col gap-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black text-xs shadow-md">
+                                        {idx + 1}
+                                    </div>
+                                    <h4 className="text-sm font-black uppercase tracking-wide text-gray-900">
+                                        Branding: <span className="text-blue-600">{label}</span>
+                                    </h4>
+                                </div>
+
+                                <LogoSelector
+                                    currentBranding={currentBranding}
+                                    onUpdate={(branding) => setCategoryBranding(cat, branding)}
+                                />
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {/* Global Actions / Complete */}
+            {!isEmbedded && (
+                <div className="bg-gray-900 rounded-3xl p-10 md:p-16 text-center space-y-10 shadow-xl relative overflow-hidden">
+                    <div className="space-y-4 relative z-10">
+                        <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Pricing & Review</p>
+                        <h4 className="text-3xl md:text-4xl font-bold text-white uppercase tracking-tight">Ready to <span className="text-blue-500">Review?</span></h4>
+                        <p className="text-gray-400 text-sm max-w-md mx-auto">
+                            Check your bundle configuration and customization details before proceeding to checkout.
+                        </p>
+                    </div>
+
+                    <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-10">
+                        <button
+                            onClick={onComplete}
+                            className="group flex items-center gap-4 px-12 py-5 bg-white hover:bg-gray-100 text-gray-900 rounded-xl font-bold uppercase tracking-wide text-sm transition-all shadow-lg"
+                        >
+                            Review Bundle Summary <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

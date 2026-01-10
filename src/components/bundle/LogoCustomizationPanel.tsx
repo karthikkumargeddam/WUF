@@ -15,7 +15,7 @@ export default function LogoCustomizationPanel({ item, onUpdate }: LogoCustomiza
     const [activeTab, setActiveTab] = useState<'text' | 'upload' | 'existing'>('text');
     const [textLogo, setTextLogo] = useState(item.logoCustomization?.text || '');
     const [selectedPlacements, setSelectedPlacements] = useState<string[]>(
-        item.logoCustomization?.placement || []
+        item.logoCustomization?.placements || []
     );
     const [uploadedFile, setUploadedFile] = useState<{ url: string; fileName: string; fileSize: number } | null>(
         item.logoCustomization?.fileUrl ? {
@@ -39,7 +39,7 @@ export default function LogoCustomizationPanel({ item, onUpdate }: LogoCustomiza
     const updateLogoCustomization = (type: 'text' | 'upload' | 'existing', placements: string[]) => {
         const customization: LogoCustomization = {
             type,
-            placement: placements,
+            placements: placements as any,
         };
 
         if (type === 'text') {

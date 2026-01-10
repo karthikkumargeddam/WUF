@@ -8,6 +8,7 @@ import MobileMenu from './MobileMenu';
 import AuthStatus from './AuthStatus';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import { Suspense } from 'react';
+import DropdownNav from './DropdownNav';
 
 export default async function Header() {
     const { collections } = await fetchCollections();
@@ -72,32 +73,8 @@ export default async function Header() {
                 </div>
             </div>
 
-            {/* Navigation */}
-            <nav className="hidden md:block border-t border-white/5 bg-transparent">
-                <div className="container mx-auto px-4">
-                    <ul className="flex items-center space-x-8 overflow-x-auto py-3 text-sm font-medium text-zinc-400">
-                        <li>
-                            <Link href="/" prefetch={true} className="hover:text-white whitespace-nowrap transition-colors">Home</Link>
-                        </li>
-                        <li>
-                            <Link href="/bundles" prefetch={true} className="hover:text-green-300 whitespace-nowrap text-green-500 font-bold transition-colors">Bundles</Link>
-                        </li>
-                        <li>
-                            <Link href="/products" prefetch={true} className="hover:text-red-300 whitespace-nowrap text-red-500 transition-colors">All Products</Link>
-                        </li>
-                        {menuCollections.map((collection) => (
-                            <li key={collection.id}>
-                                <Link href={`/collections/${collection.handle}`} prefetch={true} className="hover:text-white whitespace-nowrap capitalize transition-colors">
-                                    {collection.title}
-                                </Link>
-                            </li>
-                        ))}
-                        <li>
-                            <Link href="/collections" prefetch={true} className="hover:text-white whitespace-nowrap font-semibold transition-colors">View All Categories</Link>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
+            {/* Navigation with Dropdowns */}
+            <DropdownNav />
         </header>
     );
 }

@@ -3,7 +3,7 @@
 import { db, analytics } from '@/lib/firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { logEvent } from 'firebase/analytics';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,7 +23,7 @@ export const useAnalytics = () => {
         }
     }, []);
 
-    const trackEvent = async (eventName: string, metadata: Record<string, any> = {}) => {
+    const trackEvent = useCallback(async (eventName: string, metadata: Record<string, any> = {}) => {
         // Only track on client side
         if (typeof window === 'undefined') return;
 
@@ -56,7 +56,7 @@ export const useAnalytics = () => {
             // Fail silently to not impact user experience
             console.error("Error tracking event:", error);
         }
-    };
+    }, [sessionId]);
 
     return { trackEvent, sessionId };
 };

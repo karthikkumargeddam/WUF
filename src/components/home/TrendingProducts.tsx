@@ -2,10 +2,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import ProductCard from '@/components/product/ProductCard';
-import { fetchProducts } from '@/lib/api';
+import { getAllProducts } from '@/lib/data';
 
 export default async function TrendingProducts() {
-    const { products } = await fetchProducts(1, 8);
+    const allProducts = await getAllProducts();
+    const products = allProducts.slice(0, 8);
 
     return (
         <section className="relative py-24 md:py-32 mx-4 rounded-[3rem] overflow-hidden shadow-2xl border border-white/10 group">

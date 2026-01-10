@@ -57,26 +57,29 @@ export default function CartPage() {
                                     <div>
                                         <div className="flex justify-between items-start mb-1">
                                             <h3 className="font-bold text-lg text-zinc-900 leading-tight">{item.title}</h3>
-                                            <p className="font-black text-lg">£{(item.price * item.quantity).toFixed(2)}</p>
+                                            <div className="text-right">
+                                                <p className="font-black text-lg">£{(item.price * item.quantity).toFixed(2)}</p>
+                                                <p className="text-xs font-medium text-zinc-500">£{item.price.toFixed(2)} each</p>
+                                            </div>
                                         </div>
                                         <p className="text-sm text-zinc-500 font-medium">{item.variantTitle}</p>
                                     </div>
 
                                     <div className="flex justify-between items-end">
-                                        <div className="flex items-center bg-white rounded-full border border-zinc-200 p-1">
+                                        <div className="flex items-center bg-white rounded-full border-2 border-zinc-300 p-1 shadow-sm">
                                             <button
                                                 onClick={() => updateQuantity(item.id, item.variantId, item.quantity - 1)}
-                                                className="w-8 h-8 flex items-center justify-center hover:bg-zinc-100 rounded-full transition-colors"
+                                                className="w-8 h-8 flex items-center justify-center hover:bg-zinc-100 rounded-full transition-colors text-zinc-900 font-bold disabled:opacity-30"
                                                 disabled={item.quantity <= 1}
                                             >
-                                                <Minus size={14} />
+                                                <Minus size={16} strokeWidth={3} />
                                             </button>
-                                            <span className="w-8 text-center font-bold text-sm">{item.quantity}</span>
+                                            <span className="w-10 text-center font-black text-base text-zinc-900">{item.quantity}</span>
                                             <button
                                                 onClick={() => updateQuantity(item.id, item.variantId, item.quantity + 1)}
-                                                className="w-8 h-8 flex items-center justify-center hover:bg-zinc-100 rounded-full transition-colors"
+                                                className="w-8 h-8 flex items-center justify-center hover:bg-zinc-100 rounded-full transition-colors text-zinc-900 font-bold"
                                             >
-                                                <Plus size={14} />
+                                                <Plus size={16} strokeWidth={3} />
                                             </button>
                                         </div>
 

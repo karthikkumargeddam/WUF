@@ -1,192 +1,201 @@
 import Link from 'next/link';
-import { Package, CheckCircle, Sparkles } from 'lucide-react';
+import { Package, Check, ArrowRight } from 'lucide-react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-    title: 'Product Bundles - Wearunifab',
-    description: 'Customizable workwear bundles with free logo embroidery',
+    title: 'Workwear Bundles | Wearunifab',
+    description: 'Save on professional workwear bundles with free logo customization.',
 };
 
 export default function BundlesPage() {
-    const bundles = [
+    const featuredBundles = [
         {
-            id: '6-item-kickstarter',
-            name: '6 Item Kickstarter Bundle',
-            description: 'Perfect starter bundle for small teams',
-            items: ['2x Polo Shirts', '2x Hoodies', '2x Softshell Jackets'],
-            price: 299.99,
+            id: 'autumn-uneek-bundle',
+            name: 'Autumn Uneek Bundle',
+            tagline: 'Staff Favorite',
+            description: 'Essential warmth layer pack. 3 Hoodies, 2 Fleeces, 3 Beanies. Stay warm on site.',
+            items: [
+                { qty: 3, label: 'Hoodies' },
+                { qty: 2, label: 'Fleece Jackets' },
+                { qty: 3, label: 'Beanies' }
+            ],
+            price: 130.00,
             image: '/category-backgrounds/workwear.png',
+            badge: 'Top Pick',
+            color: 'bg-orange-600'
         },
         {
             id: '10-item-professional',
-            name: '10 Item Professional Bundle',
-            description: 'Complete workwear solution for growing businesses',
-            items: ['4x Polo Shirts', '3x Hoodies', '3x Softshell Jackets'],
-            price: 499.99,
+            name: 'Pro Pack',
+            tagline: 'Most Popular',
+            description: 'The standard choice for growing teams. Includes polos, sweatshirts and fleece.',
+            items: [
+                { qty: 5, label: 'Polo Shirts' },
+                { qty: 3, label: 'Sweatshirts' },
+                { qty: 2, label: 'Fleeces' }
+            ],
+            price: 185.00,
             image: '/category-backgrounds/hoodies.png',
+            badge: 'Popular',
+            color: 'bg-green-600'
         },
         {
             id: '15-item-enterprise',
-            name: '15 Item Enterprise Bundle',
-            description: 'Full team outfitting with maximum value',
-            items: ['6x Polo Shirts', '5x Hoodies', '4x Softshell Jackets'],
-            price: 699.99,
+            name: 'Enterprise Pack',
+            tagline: 'Complete Uniform',
+            description: 'Full uniform solution for larger teams or comprehensive individual issue.',
+            items: [
+                { qty: 7, label: 'Polo Shirts' },
+                { qty: 5, label: 'Hoodies' },
+                { qty: 3, label: 'Softshell Jackets' }
+            ],
+            price: 299.00,
             image: '/category-backgrounds/jackets.png',
+            color: 'bg-purple-600'
+        }
+    ];
+
+    const specializedBundles = [
+        {
+            id: 'kids-school-bundle',
+            name: 'Kids School Pack (VAT FREE)',
+            price: 45.00,
+            image: '/category-backgrounds/polos.png',
+            count: '5 Items'
         },
+        {
+            id: 'hospitality-bundle',
+            name: 'Hospitality Pack',
+            price: 199.99,
+            image: '/images/bundles/hospitality_bundle_card_1767936313533.png',
+            count: '5 Items'
+        },
+        {
+            id: 'polo-bundle',
+            name: '5 Pack Polos',
+            price: 65.00,
+            image: '/category-backgrounds/polos.png',
+            count: '5 Items'
+        },
+        {
+            id: 'hoodies-bundle',
+            name: '5 Pack Hoodies',
+            price: 110.00,
+            image: '/category-backgrounds/hoodies.png',
+            count: '5 Items'
+        },
+        {
+            id: 'hi-visibility-bundle',
+            name: 'Hi-Vis Safety Pack',
+            price: 45.00,
+            image: '/category-backgrounds/hi-vis.png',
+            count: '5 Items'
+        },
+        {
+            id: 'fleece-bundle-just-embroidery',
+            name: 'Fleece Warmth Pack',
+            price: 85.00,
+            image: '/category-backgrounds/fleeces.png',
+            count: '5 Items'
+        },
+        {
+            id: 't-shirt-bundle',
+            name: '10 Pack T-Shirts',
+            price: 75.00,
+            image: '/category-backgrounds/t-shirts.png',
+            count: '10 Items'
+        }
     ];
 
     return (
         <div className="min-h-screen bg-white">
-            {/* Hero Section */}
-            <section className="relative bg-zinc-950 text-white py-24 md:py-32 overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#18181b_0%,#09090b_100%)]" />
-                <div className="absolute top-1/4 right-0 w-96 h-96 bg-zinc-800/20 rounded-full blur-[120px] animate-pulse" />
-
-                <div className="container mx-auto px-4 relative z-10">
-                    <div className="max-w-3xl">
-                        <div className="inline-block px-6 py-2 rounded-full bg-zinc-800 border border-zinc-700 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-6">
-                            Customizable Bundles
+            {/* Value Proposition Header */}
+            <div className="bg-gray-900 text-white py-20">
+                <div className="container mx-auto px-4 text-center">
+                    <h1 className="text-4xl md:text-5xl font-bold mb-6">Workwear Bundles</h1>
+                    <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-10">
+                        Professional uniforms made simple. Select a bundle, customize your items, and add your logo.
+                        Bundle pricing includes <span className="text-white font-bold underline decoration-blue-500">Free Logo Setup</span>.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-6 text-sm font-medium text-gray-400">
+                        <div className="flex items-center gap-2">
+                            <Check className="text-green-400 w-5 h-5" /> Free Logo Upload
                         </div>
-                        <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9] uppercase italic mb-6">
-                            Workwear <span className="text-gradient">Bundles</span>
-                        </h1>
-                        <p className="text-xl text-zinc-400 leading-relaxed font-medium mb-8">
-                            Complete workwear packages with free logo customization. Perfect for teams of any size.
-                        </p>
-                        <div className="flex flex-wrap gap-6">
-                            <div className="flex items-center gap-3">
-                                <CheckCircle className="text-green-400" size={24} />
-                                <span className="text-sm font-bold">Free Logo Embroidery</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <CheckCircle className="text-green-400" size={24} />
-                                <span className="text-sm font-bold">Custom Sizes & Colors</span>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <CheckCircle className="text-green-400" size={24} />
-                                <span className="text-sm font-bold">Design Proof Included</span>
-                            </div>
+                        <div className="flex items-center gap-2">
+                            <Check className="text-green-400 w-5 h-5" /> Mix & Match Sizes/Colors
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <Check className="text-green-400 w-5 h-5" /> Bulk Discounts Applied
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
-            {/* Bundles Grid */}
-            <section className="py-24 md:py-32">
-                <div className="container mx-auto px-4">
-                    <div className="mb-16">
-                        <p className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400 mb-2">
-                            Available Packages
-                        </p>
-                        <h2 className="text-4xl font-black text-zinc-950 tracking-tighter uppercase italic">
-                            Choose Your Bundle
-                        </h2>
-                    </div>
+            {/* Featured Bundles */}
+            <section className="py-16 container mx-auto px-4">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 -mt-24 relative z-10">
+                    {featuredBundles.map((bundle) => (
+                        <div key={bundle.id} className="bg-white rounded-xl shadow-xl overflow-hidden border border-gray-100 flex flex-col hover:shadow-2xl transition-shadow">
+                            <div className="h-48 bg-gray-100 relative overflow-hidden">
+                                {bundle.badge && (
+                                    <span className={`absolute top-4 right-4 ${bundle.color} text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide`}>
+                                        {bundle.badge}
+                                    </span>
+                                )}
+                                <div className="absolute bottom-0 left-0 w-full h-1/2 bg-gradient-to-t from-black/50 to-transparent" />
+                                <img src={bundle.image} alt={bundle.name} className="w-full h-full object-cover" />
+                            </div>
+                            <div className="p-8 flex-1 flex flex-col">
+                                <h3 className="text-2xl font-bold text-gray-900 mb-2">{bundle.name}</h3>
+                                <p className="text-gray-500 text-sm mb-6">{bundle.description}</p>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {bundles.map((bundle) => (
-                            <div
-                                key={bundle.id}
-                                className="group relative bg-white rounded-[2.5rem] border-2 border-zinc-100 overflow-hidden hover:border-zinc-950 transition-all duration-500 hover:shadow-2xl"
-                            >
-                                {/* Image */}
-                                <div className="relative h-64 bg-zinc-50 overflow-hidden">
-                                    <img
-                                        src={bundle.image}
-                                        alt={bundle.name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-950/80 to-transparent" />
-                                    <div className="absolute bottom-4 left-4">
-                                        <span className="inline-block px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-white border border-white/20">
-                                            Free Logo
-                                        </span>
-                                    </div>
+                                <div className="space-y-3 mb-8 bg-gray-50 p-4 rounded-lg">
+                                    {bundle.items.map((item, idx) => (
+                                        <div key={idx} className="flex justify-between items-center text-sm">
+                                            <span className="text-gray-600">{item.label}</span>
+                                            <span className="font-bold text-gray-900">x{item.qty}</span>
+                                        </div>
+                                    ))}
                                 </div>
 
-                                {/* Content */}
-                                <div className="p-8">
-                                    <h3 className="text-2xl font-black text-zinc-950 uppercase tracking-tight mb-2">
-                                        {bundle.name}
-                                    </h3>
-                                    <p className="text-sm text-zinc-600 mb-6">
-                                        {bundle.description}
-                                    </p>
-
-                                    {/* Items List */}
-                                    <div className="space-y-2 mb-6">
-                                        {bundle.items.map((item, index) => (
-                                            <div key={index} className="flex items-center gap-2">
-                                                <Package size={16} className="text-zinc-400" />
-                                                <span className="text-xs font-bold text-zinc-700">{item}</span>
-                                            </div>
-                                        ))}
+                                <div className="mt-auto flex items-center justify-between">
+                                    <div>
+                                        <p className="text-xs text-gray-400 uppercase">From</p>
+                                        <p className="text-3xl font-bold text-gray-900">£{bundle.price}</p>
                                     </div>
-
-                                    {/* Price */}
-                                    <div className="flex items-end justify-between mb-6">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
-                                                Bundle Price
-                                            </p>
-                                            <p className="text-3xl font-black text-zinc-950 tracking-tighter italic">
-                                                £{bundle.price}
-                                            </p>
-                                        </div>
-                                        <Sparkles className="text-zinc-300" size={32} />
-                                    </div>
-
-                                    {/* CTA */}
                                     <Link
                                         href={`/bundles/${bundle.id}/customize`}
-                                        className="block w-full py-4 bg-zinc-950 text-white text-center font-black uppercase tracking-widest text-xs rounded-xl hover:bg-zinc-800 transition-all shadow-lg"
+                                        className="bg-black hover:bg-gray-800 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2"
                                     >
-                                        Start Customizing
+                                        Customize <ArrowRight size={16} />
                                     </Link>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                    ))}
                 </div>
             </section>
 
-            {/* Features */}
-            <section className="py-24 bg-zinc-50">
+            {/* More Collections */}
+            <section className="py-16 bg-gray-50">
                 <div className="container mx-auto px-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-                        <div className="text-center">
-                            <div className="inline-block p-6 bg-white rounded-2xl shadow-sm mb-4">
-                                <Package size={32} className="text-zinc-950" />
-                            </div>
-                            <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 mb-2">
-                                Custom Selection
-                            </h3>
-                            <p className="text-sm text-zinc-600">
-                                Choose specific products, sizes, and colors for each bundle item
-                            </p>
-                        </div>
-                        <div className="text-center">
-                            <div className="inline-block p-6 bg-white rounded-2xl shadow-sm mb-4">
-                                <Sparkles size={32} className="text-zinc-950" />
-                            </div>
-                            <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 mb-2">
-                                Logo Customization
-                            </h3>
-                            <p className="text-sm text-zinc-600">
-                                Add text logos or upload your own design for each garment
-                            </p>
-                        </div>
-                        <div className="text-center">
-                            <div className="inline-block p-6 bg-white rounded-2xl shadow-sm mb-4">
-                                <CheckCircle size={32} className="text-zinc-950" />
-                            </div>
-                            <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 mb-2">
-                                Design Proof
-                            </h3>
-                            <p className="text-sm text-zinc-600">
-                                We'll send a proof for approval before production begins
-                            </p>
-                        </div>
+                    <h2 className="text-2xl font-bold text-gray-900 mb-8">Specialized Packs</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {specializedBundles.map((bundle) => (
+                            <Link
+                                key={bundle.id}
+                                href={`/bundles/${bundle.id}/customize`}
+                                className="group bg-white rounded-xl overflow-hidden border border-gray-100 hover:border-gray-300 transition-all hover:-translate-y-1 block"
+                            >
+                                <div className="aspect-[4/3] bg-gray-100 relative text-gray-500 flex items-center justify-center">
+                                    <img src={bundle.image} alt={bundle.name} className="w-full h-full object-cover" />
+                                </div>
+                                <div className="p-4">
+                                    <h4 className="font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{bundle.name}</h4>
+                                    <p className="text-gray-500 text-sm mt-1">£{bundle.price}</p>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </section>

@@ -51,7 +51,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Contact Email</label>
+                    <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">Contact Email</label>
                     <input
                         required
                         type="email"
@@ -63,7 +63,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
                 </div>
                 <div className="grid grid-cols-2 gap-6">
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500">First Name</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">First Name</label>
                         <input
                             required
                             type="text"
@@ -74,7 +74,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Last Name</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">Last Name</label>
                         <input
                             required
                             type="text"
@@ -86,7 +86,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
                     </div>
                 </div>
                 <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-zinc-500">Street Address</label>
+                    <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">Street Address</label>
                     <input
                         required
                         type="text"
@@ -98,7 +98,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
                 </div>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500">City</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">City</label>
                         <input
                             required
                             type="text"
@@ -109,7 +109,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
                         />
                     </div>
                     <div className="space-y-2">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500">State</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">State</label>
                         <input
                             required
                             type="text"
@@ -120,7 +120,7 @@ export default function ShippingForm({ onNext, initialData, userProfile }: Shipp
                         />
                     </div>
                     <div className="space-y-2 md:col-span-1 col-span-2">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500">ZIP Code</label>
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-800 dark:text-zinc-300">ZIP Code</label>
                         <input
                             required
                             type="text"
