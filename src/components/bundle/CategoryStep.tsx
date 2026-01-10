@@ -36,8 +36,8 @@ export default function CategoryStep({
             productTitle: product.title,
             productImage: product.images[0]?.src,
             variantId: firstVariant?.id,
-            size: firstVariant?.option1,
-            color: firstVariant?.option2,
+            size: firstVariant?.option1 || undefined,
+            color: firstVariant?.option2 || undefined,
             price: parseFloat(firstVariant?.price || '0'),
             productSku: firstVariant?.sku,
         });
@@ -224,8 +224,8 @@ export default function CategoryStep({
                                     productTitle: firstProduct.title,
                                     productImage: firstProduct.images[0]?.src,
                                     variantId: firstProduct.variants[0]?.id,
-                                    size: firstProduct.variants[0]?.option1,
-                                    color: firstProduct.variants[0]?.option2,
+                                    size: firstProduct.variants[0]?.option1 || undefined,
+                                    color: firstProduct.variants[0]?.option2 || undefined,
                                     price: parseFloat(firstProduct.variants[0]?.price || '0'),
                                     productSku: firstProduct.variants[0]?.sku,
                                 });
