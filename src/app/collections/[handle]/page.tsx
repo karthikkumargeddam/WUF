@@ -179,10 +179,7 @@ export default async function CollectionPage({ params, searchParams }: Props) {
                             {collection?.title || handle.replace(/-/g, ' ')}
                         </h1>
 
-                        {/* Debug Banner - Visible in Dev/Admin or always for now */}
-                        <div className="bg-red-500/80 text-white text-[10px] p-2 mt-2 rounded font-mono">
-                            DEBUG: Handle: {handle} | Source: {source} | Count: {products.length} | Page: {page}
-                        </div>
+
                     </div>
                 </div>
             </div>
